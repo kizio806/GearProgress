@@ -133,4 +133,67 @@ class TimerServiceTest {
     timerService.resetTimer(diamond);
     assertFalse(timerService.isPaused(diamond));
   }
+
+  @Test
+  void testTimerSpecRoundTripAndPauseProgression() {
+    TierKey diamond = TierKey.of(EquipmentCategory.ARMOR, "diamond");
+    registry.register(
+        new EquipmentDefinition(
+            diamond,
+            UnlockCondition.timer(Duration.ofDays(10)),
+            RestrictionPolicy.all(),
+            EnchantmentPolicy.forbidden()));
+
+    progressionService.initialize().join();
+
+    // Check server start epoch
+    assertEquals(clock.get(), timerService.serverStartEpoch());
+
+    // Pause timer and advance clock
+    timerService.pause(diamond);
+    clock.set(clock.get().plus(Duration.ofDays(2)));
+    timerService.evaluateProgression().join();
+    assertFalse(progressionService.isUnlocked(diamond));
+
+    // Create spec
+    Instant epoch = clock.get().minus(Duration.ofDays(2));
+    io.github.kizio806.gearprogress.application.config.spec.TimersConfigSpec spec =
+        new io.github.kizio806.gearprogress.application.config.spec.TimersConfigSpec(
+            epoch,
+            java.util.Map.of(diamond.toString(), true),
+            java.util.Map.of(diamond.toString(), 3600L));
+
+    // Create fresh timer service and load spec
+    TimePort timePort = clock::get;
+    LifecycleReporterPort dummyReporter =
+        new LifecycleReporterPort() {
+          @Override
+          public void info(String message) {}
+
+          @Override
+          public void warning(String message) {}
+
+          @Override
+          public void severe(String message, Throwable throwable) {}
+        };
+    TimerService restored = new TimerService(progressionService, registry, timePort, dummyReporter);
+    restored.loadFromSpec(spec);
+
+    assertTrue(restored.isPaused(diamond));
+    assertEquals(epoch, restored.serverStartEpoch());
+
+    // Resume and evaluate
+    restored.resume(diamond);
+    assertFalse(restored.isPaused(diamond));
+
+    // Time remaining for untracked tier
+    TierKey commandTier = TierKey.of(EquipmentCategory.ARMOR, "iron");
+    registry.register(
+        new EquipmentDefinition(
+            commandTier,
+            UnlockCondition.command(),
+            RestrictionPolicy.none(),
+            EnchantmentPolicy.allowed()));
+    assertTrue(restored.timeRemaining(commandTier).isEmpty());
+  }
 }

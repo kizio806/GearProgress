@@ -78,6 +78,16 @@ class ProgressionServiceTest {
     assertTrue(lockedChanged);
     assertFalse(service.isUnlocked(diamond));
     assertEquals(1, eventPublisher.lockEvents.size());
+
+    // Lock diamond again returns false
+    boolean secondLock = service.lock(diamond, "ADMIN").join();
+    assertFalse(secondLock);
+
+    // Lock unregistered tier
+    TierKey unregisteredNetherite = TierKey.of(EquipmentCategory.ARMOR, "netherite");
+    boolean lockedUnregistered = service.lock(unregisteredNetherite, "ADMIN").join();
+    assertTrue(lockedUnregistered);
+    assertFalse(service.isUnlocked(unregisteredNetherite));
   }
 
   @Test
@@ -95,6 +105,12 @@ class ProgressionServiceTest {
     assertTrue(service.isUnlocked(diamond));
 
     service.reset(EquipmentCategory.ARMOR, "ADMIN").join();
+    assertFalse(service.isUnlocked(diamond));
+
+    // Reset all categories (null category)
+    service.unlock(diamond, UnlockMethod.COMMAND, "ADMIN").join();
+    assertTrue(service.isUnlocked(diamond));
+    service.reset(null, "ADMIN").join();
     assertFalse(service.isUnlocked(diamond));
   }
 
@@ -114,6 +130,15 @@ class ProgressionServiceTest {
     service.setEnchantmentAllowed(diamond, true, "ADMIN").join();
     assertTrue(service.isEnchantmentAllowed(diamond));
     assertEquals(1, eventPublisher.enchantEvents.size());
+
+    // Setting same value
+    service.setEnchantmentAllowed(diamond, true, "ADMIN").join();
+    assertTrue(service.isEnchantmentAllowed(diamond));
+
+    // Setting enchantment on unregistered tier returns completed future without state change
+    TierKey unregisteredTool = TierKey.of(EquipmentCategory.TOOLS, "copper");
+    service.setEnchantmentAllowed(unregisteredTool, false, "ADMIN").join();
+    assertTrue(service.isEnchantmentAllowed(unregisteredTool));
 
     assertTrue(service.state(diamond).isPresent());
     assertEquals(1, service.snapshot().states().size());

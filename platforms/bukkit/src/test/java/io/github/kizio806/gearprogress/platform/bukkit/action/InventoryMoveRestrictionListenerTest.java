@@ -130,4 +130,98 @@ class InventoryMoveRestrictionListenerTest {
     verify(event).setCancelled(true);
     verify(feedback).notifyRestricted(player, key, RestrictionType.INVENTORY_MOVE);
   }
+
+  @Test
+  @DisplayName("Inventory click ignores non-player clicker or bypass")
+  void testInventoryClickBypassAndNonPlayer() {
+    InventoryClickEvent nonPlayerEvent = mock(InventoryClickEvent.class);
+    when(nonPlayerEvent.getWhoClicked()).thenReturn(mock(org.bukkit.entity.HumanEntity.class));
+    listener.onInventoryClick(nonPlayerEvent);
+    verify(nonPlayerEvent, org.mockito.Mockito.never()).setCancelled(true);
+
+    InventoryClickEvent bypassEvent = mock(InventoryClickEvent.class);
+    Player player = mock(Player.class);
+    when(bypassEvent.getWhoClicked()).thenReturn(player);
+    when(feedback.canBypass(player)).thenReturn(true);
+    listener.onInventoryClick(bypassEvent);
+    verify(bypassEvent, org.mockito.Mockito.never()).setCancelled(true);
+  }
+
+  @Test
+  @DisplayName("Inventory click cancels when cursor item is restricted")
+  void testInventoryClickCursorRestricted() {
+    InventoryClickEvent event = mock(InventoryClickEvent.class);
+    Player player = mock(Player.class);
+    ItemStack cursor = mock(ItemStack.class);
+
+    when(event.getWhoClicked()).thenReturn(player);
+    when(event.getCurrentItem()).thenReturn(null);
+    when(event.getCursor()).thenReturn(cursor);
+    when(cursor.getAmount()).thenReturn(1);
+    when(cursor.getType()).thenReturn(Material.NETHERITE_HELMET);
+
+    TierKey key = TierKey.of(EquipmentCategory.ARMOR, "netherite");
+    when(feedback.canBypass(player)).thenReturn(false);
+    when(queryService.isActionRestricted(key, RestrictionType.INVENTORY_MOVE)).thenReturn(true);
+
+    listener.onInventoryClick(event);
+
+    verify(event).setCancelled(true);
+    verify(feedback).notifyRestricted(player, key, RestrictionType.INVENTORY_MOVE);
+  }
+
+  @Test
+  @DisplayName("Inventory click cancels when number key swap target is restricted")
+  void testInventoryClickNumberKeySwapRestricted() {
+    InventoryClickEvent event = mock(InventoryClickEvent.class);
+    Player player = mock(Player.class);
+    org.bukkit.inventory.PlayerInventory inv = mock(org.bukkit.inventory.PlayerInventory.class);
+    ItemStack hotbarItem = mock(ItemStack.class);
+
+    when(event.getWhoClicked()).thenReturn(player);
+    when(player.getInventory()).thenReturn(inv);
+    when(event.getCurrentItem()).thenReturn(null);
+    when(event.getCursor()).thenReturn(null);
+    when(event.getClick()).thenReturn(org.bukkit.event.inventory.ClickType.NUMBER_KEY);
+    when(event.getHotbarButton()).thenReturn(2);
+    when(inv.getItem(2)).thenReturn(hotbarItem);
+    when(hotbarItem.getAmount()).thenReturn(1);
+    when(hotbarItem.getType()).thenReturn(Material.NETHERITE_BOOTS);
+
+    TierKey key = TierKey.of(EquipmentCategory.ARMOR, "netherite");
+    when(feedback.canBypass(player)).thenReturn(false);
+    when(queryService.isActionRestricted(key, RestrictionType.INVENTORY_MOVE)).thenReturn(true);
+
+    listener.onInventoryClick(event);
+
+    verify(event).setCancelled(true);
+    verify(feedback).notifyRestricted(player, key, RestrictionType.INVENTORY_MOVE);
+  }
+
+  @Test
+  @DisplayName("Player swap hands cancels when offhand item is restricted")
+  void testSwapHandsOffHandRestricted() {
+    PlayerSwapHandItemsEvent event = mock(PlayerSwapHandItemsEvent.class);
+    Player player = mock(Player.class);
+    ItemStack mainHand = mock(ItemStack.class);
+    ItemStack offHand = mock(ItemStack.class);
+
+    when(event.getPlayer()).thenReturn(player);
+    when(event.getMainHandItem()).thenReturn(mainHand);
+    when(mainHand.getAmount()).thenReturn(1);
+    when(mainHand.getType()).thenReturn(Material.DIRT);
+
+    when(event.getOffHandItem()).thenReturn(offHand);
+    when(offHand.getAmount()).thenReturn(1);
+    when(offHand.getType()).thenReturn(Material.NETHERITE_SWORD);
+
+    TierKey key = TierKey.of(EquipmentCategory.WEAPONS, "netherite");
+    when(feedback.canBypass(player)).thenReturn(false);
+    when(queryService.isActionRestricted(key, RestrictionType.INVENTORY_MOVE)).thenReturn(true);
+
+    listener.onPlayerSwapHandItems(event);
+
+    verify(event).setCancelled(true);
+    verify(feedback).notifyRestricted(player, key, RestrictionType.INVENTORY_MOVE);
+  }
 }
