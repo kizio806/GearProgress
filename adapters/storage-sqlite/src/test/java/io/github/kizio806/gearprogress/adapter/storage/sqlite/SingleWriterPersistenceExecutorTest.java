@@ -87,17 +87,21 @@ class SingleWriterPersistenceExecutorTest {
   @Test
   void testQueueCapacityRejection() throws Exception {
     SingleWriterPersistenceExecutor executor = new SingleWriterPersistenceExecutor(2);
+    CountDownLatch started = new CountDownLatch(1);
     CountDownLatch blocker = new CountDownLatch(1);
 
     var blockerFuture =
         executor.run(
             () -> {
+              started.countDown();
               try {
                 assertTrue(blocker.await(5, TimeUnit.SECONDS));
               } catch (InterruptedException ignored) {
                 Thread.currentThread().interrupt();
               }
             });
+
+    assertTrue(started.await(5, TimeUnit.SECONDS));
 
     var queued1 = executor.submit(() -> 1);
     var queued2 = executor.submit(() -> 2);
