@@ -1,5 +1,6 @@
 package io.github.kizio806.gearprogress.platform.spigot.command;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -188,9 +189,9 @@ class SpigotMainCommandTest {
   }
 
   @Test
-  @DisplayName("handleUnknownCommand dispatches unknown message")
+  @DisplayName("handleUnknownCommand dispatches unknown message and returns false")
   void testUnknownCommand() {
-    assertTrue(mainCommand.onCommand(sender, command, "gp", new String[] {"nonexistent"}));
+    assertFalse(mainCommand.onCommand(sender, command, "gp", new String[] {"nonexistent"}));
     verify(helper).send(sender, "general.unknown-command");
   }
 

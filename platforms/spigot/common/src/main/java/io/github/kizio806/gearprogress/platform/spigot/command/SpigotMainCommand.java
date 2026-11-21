@@ -55,7 +55,10 @@ public final class SpigotMainCommand implements CommandExecutor, TabCompleter {
       case "info" -> handleInfo(sender, args);
       case "status" -> handleStatus(sender);
       case "timer" -> handleTimer(sender, args);
-      default -> helper.send(sender, "general.unknown-command");
+      default -> {
+        helper.send(sender, "general.unknown-command");
+        return false;
+      }
     }
     return true;
   }
