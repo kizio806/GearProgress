@@ -1,0 +1,55 @@
+# GearProgress English Localization
+schema-version: 1
+
+general:
+  prefix: "<dark_gray>[<gradient:#ffaa00:#ff5500>GearProgress</gradient>]</dark_gray> "
+  plugin-reloaded: "<green>Configuration and progression state reloaded successfully.</green>"
+  no-permission: "<red>You do not have permission to execute this command.</red>"
+
+blocking:
+  craft: "<red>Crafting <gold>%tier% %category%</gold> is currently locked!</red>"
+  use: "<red>Using <gold>%tier% %category%</gold> is currently locked!</red>"
+  equip: "<red>Equipping <gold>%tier% %category%</gold> is currently locked!</red>"
+  pickup: "<red>Picking up <gold>%tier% %category%</gold> is currently locked!</red>"
+  inventory-move: "<red>Moving <gold>%tier% %category%</gold> in inventory is locked!</red>"
+  enchantment: "<red>Enchantments are not permitted on <gold>%tier% %category%</gold>!</red>"
+
+broadcast:
+  tier-unlocked: "<gold><bold>PROGRESSION</bold></gold> <yellow>%category% tier <gold>%tier%</gold> has been unlocked!</yellow>"
+  tier-locked: "<gold><bold>PROGRESSION</bold></gold> <yellow>%category% tier <gold>%tier%</gold> has been locked by an administrator.</yellow>"
+  enchantment-unlocked: "<gold><bold>PROGRESSION</bold></gold> <aqua>Enchantments are now permitted on <gold>%tier% %category%</gold>!</aqua>"
+
+command:
+  help:
+    header: "<gold>=== GearProgress Commands ===</gold>"
+    status: "<yellow>/gp status</yellow> <gray>- View overall progression overview</gray>"
+    info: "<yellow>/gp info [category] [tier]</yellow> <gray>- View detailed tier status</gray>"
+    unlock: "<yellow>/gp unlock <category> <tier></yellow> <gray>- Manually unlock a tier</gray>"
+    lock: "<yellow>/gp lock <category> <tier></yellow> <gray>- Manually lock a tier</gray>"
+    timer: "<yellow>/gp timer <status|add|set|pause|resume> </yellow> <gray>- Manage progression timers</gray>"
+    reset: "<yellow>/gp reset <category|all></yellow> <gray>- Reset progression back to config defaults</gray>"
+    reload: "<yellow>/gp reload</yellow> <gray>- Reload all configuration files</gray>"
+  status:
+    header: "<gold>=== GearProgress Server Progression Status ===</gold>"
+    entry: " <gray>•</gray> <yellow>%category%</yellow> <gold>%tier%</gold>: %status% <gray>(Enchants: %enchants%)</gray>"
+    status-unlocked: "<green>UNLOCKED</green>"
+    status-locked: "<red>LOCKED</red>"
+  info:
+    header: "<gold>=== GearProgress Info: %category% %tier% ===</gold>"
+    status: "<yellow>Status:</yellow> %status%"
+    unlock-method: "<yellow>Unlock Method:</yellow> <white>%method%</white>"
+    remaining-time: "<yellow>Time Remaining:</yellow> <white>%time%</white>"
+    enchantments: "<yellow>Enchantments Allowed:</yellow> <white>%allowed%</white>"
+    restrictions: "<yellow>Active Restrictions:</yellow> <white>%restrictions%</white>"
+  unlock:
+    success: "<green>Successfully unlocked tier <gold>%tier%</gold> in category <gold>%category%</gold>.</green>"
+    already-unlocked: "<yellow>Tier <gold>%tier%</gold> in category <gold>%category%</gold> is already unlocked.</yellow>"
+  lock:
+    success: "<green>Successfully locked tier <gold>%tier%</gold> in category <gold>%category%</gold>.</green>"
+    already-locked: "<yellow>Tier <gold>%tier%</gold> in category <gold>%category%</gold> is already locked.</yellow>"
+  timer:
+    paused: "<yellow>Timer for <gold>%category%:%tier%</gold> has been paused.</yellow>"
+    resumed: "<green>Timer for <gold>%category%:%tier%</gold> has been resumed.</green>"
+    adjusted: "<green>Timer for <gold>%category%:%tier%</gold> adjusted. New remaining: <white>%time%</white>.</green>"
+  reset:
+    success: "<green>Progression reset successfully for %target%.</green>"

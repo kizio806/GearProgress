@@ -1,0 +1,6 @@
+# GearProgress Storage Configuration
+schema-version: 1
+
+type: sqlite
+sqlite:
+  file: gearprogress.db

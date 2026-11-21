@@ -1,0 +1,6 @@
+# GearProgress Timer State Configuration
+schema-version: 1
+
+server-start-epoch: "2026-11-20T20:00:00Z"
+paused-states: {}
+accumulated-seconds: {}
