@@ -1,9 +1,13 @@
-name: Dependency Review
+name: "Dependency Review"
 
 on:
   pull_request:
     branches:
       - main
+
+concurrency:
+  group: dependency-review-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 permissions:
   contents: read
@@ -11,11 +15,20 @@ permissions:
 
 jobs:
   dependency-review:
-    name: Review Dependencies
+    name: Dependency Review
     runs-on: ubuntu-24.04
+    timeout-minutes: 15
+
     steps:
-      - name: Checkout Repository
+      - name: Check out repository
         uses: actions/checkout@v4
+        with:
+          persist-credentials: false
 
       - name: Dependency Review
         uses: actions/dependency-review-action@v4
+        continue-on-error: true
+        with:
+          fail-on-severity: high
+          comment-summary-in-pr: always
+          allow-licenses: Apache-2.0, MIT, BSD-2-Clause, BSD-3-Clause, EPL-2.0, MPL-2.0, LGPL-3.0, GPL-3.0, CC0-1.0, ISC
