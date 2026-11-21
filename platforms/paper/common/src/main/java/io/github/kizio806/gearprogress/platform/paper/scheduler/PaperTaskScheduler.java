@@ -43,6 +43,6 @@ public final class PaperTaskScheduler implements TaskSchedulerPort {
                 period.toMillis(),
                 TimeUnit.MILLISECONDS);
 
-    return scheduled != null ? scheduled::cancel : () -> {};
+    return scheduled::cancel;
   }
 }

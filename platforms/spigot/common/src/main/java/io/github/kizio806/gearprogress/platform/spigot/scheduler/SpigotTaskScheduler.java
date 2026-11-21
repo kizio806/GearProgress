@@ -35,6 +35,6 @@ public final class SpigotTaskScheduler implements TaskSchedulerPort {
     BukkitTask scheduled =
         Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, task, initialTicks, periodTicks);
 
-    return scheduled != null ? scheduled::cancel : () -> {};
+    return scheduled::cancel;
   }
 }
