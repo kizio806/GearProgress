@@ -1,0 +1,29 @@
+name: GearProgress
+version: '${version}'
+main: io.github.kizio806.gearprogress.platform.paper.GearProgressPlugin
+description: Equipment progression management plugin for Paper, Purpur and Folia servers.
+authors:
+  - kizio806
+website: https://github.com/kizio806/GearProgress
+api-version: '1.21'
+folia-supported: true
+softdepend:
+  - PlaceholderAPI
+
+permissions:
+  gearprogress.admin:
+    description: Full administrative access to GearProgress
+    default: op
+    children:
+      gearprogress.reload: true
+      gearprogress.bypass: true
+      gearprogress.use: true
+  gearprogress.reload:
+    description: Permission to reload GearProgress configuration
+    default: op
+  gearprogress.bypass:
+    description: Bypass all equipment progression restrictions
+    default: op
+  gearprogress.use:
+    description: View equipment progression status and info
+    default: true

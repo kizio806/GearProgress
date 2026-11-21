@@ -1,0 +1,271 @@
+# GearProgress Equipment Configuration
+schema-version: 1
+
+categories:
+  armor:
+    leather:
+      unlock:
+        method: always
+      blocking:
+        craft: true
+        use: true
+        equip: true
+        pickup: false
+        inventory-move: false
+      allow-enchantments: true
+    chainmail:
+      unlock:
+        method: timer
+        after: 3d
+      blocking:
+        craft: true
+        use: true
+        equip: true
+        pickup: false
+        inventory-move: false
+      allow-enchantments: true
+    iron:
+      unlock:
+        method: timer
+        after: 5d
+      blocking:
+        craft: true
+        use: true
+        equip: true
+        pickup: false
+        inventory-move: false
+      allow-enchantments: false
+    golden:
+      unlock:
+        method: always
+      blocking:
+        craft: true
+        use: true
+        equip: true
+        pickup: false
+        inventory-move: false
+      allow-enchantments: true
+    diamond:
+      unlock:
+        method: timer
+        after: 7d
+      blocking:
+        craft: true
+        use: true
+        equip: true
+        pickup: false
+        inventory-move: false
+      allow-enchantments: false
+    netherite:
+      unlock:
+        method: timer
+        after: 14d
+      blocking:
+        craft: true
+        use: true
+        equip: true
+        pickup: true
+        inventory-move: false
+      allow-enchantments: false
+
+  tools:
+    wooden:
+      unlock:
+        method: always
+      blocking:
+        craft: true
+        use: true
+        equip: true
+        pickup: false
+        inventory-move: false
+      allow-enchantments: true
+    stone:
+      unlock:
+        method: always
+      blocking:
+        craft: true
+        use: true
+        equip: true
+        pickup: false
+        inventory-move: false
+      allow-enchantments: true
+    iron:
+      unlock:
+        method: timer
+        after: 3d
+      blocking:
+        craft: true
+        use: true
+        equip: true
+        pickup: false
+        inventory-move: false
+      allow-enchantments: true
+    golden:
+      unlock:
+        method: timer
+        after: 3d
+      blocking:
+        craft: true
+        use: true
+        equip: true
+        pickup: false
+        inventory-move: false
+      allow-enchantments: true
+    diamond:
+      unlock:
+        method: timer
+        after: 7d
+      blocking:
+        craft: true
+        use: true
+        equip: true
+        pickup: false
+        inventory-move: false
+      allow-enchantments: false
+    netherite:
+      unlock:
+        method: timer
+        after: 14d
+      blocking:
+        craft: true
+        use: true
+        equip: true
+        pickup: true
+        inventory-move: false
+      allow-enchantments: false
+
+  weapons:
+    wooden:
+      unlock:
+        method: always
+      blocking:
+        craft: true
+        use: true
+        equip: true
+        pickup: false
+        inventory-move: false
+      allow-enchantments: true
+    stone:
+      unlock:
+        method: always
+      blocking:
+        craft: true
+        use: true
+        equip: true
+        pickup: false
+        inventory-move: false
+      allow-enchantments: true
+    iron:
+      unlock:
+        method: timer
+        after: 3d
+      blocking:
+        craft: true
+        use: true
+        equip: true
+        pickup: false
+        inventory-move: false
+      allow-enchantments: true
+    golden:
+      unlock:
+        method: timer
+        after: 3d
+      blocking:
+        craft: true
+        use: true
+        equip: true
+        pickup: false
+        inventory-move: false
+      allow-enchantments: true
+    diamond:
+      unlock:
+        method: timer
+        after: 7d
+      blocking:
+        craft: true
+        use: true
+        equip: true
+        pickup: false
+        inventory-move: false
+      allow-enchantments: false
+    netherite:
+      unlock:
+        method: timer
+        after: 14d
+      blocking:
+        craft: true
+        use: true
+        equip: true
+        pickup: true
+        inventory-move: false
+      allow-enchantments: false
+    bow:
+      unlock:
+        method: timer
+        after: 2d
+      blocking:
+        craft: true
+        use: true
+        equip: true
+        pickup: false
+        inventory-move: false
+      allow-enchantments: true
+    crossbow:
+      unlock:
+        method: timer
+        after: 4d
+      blocking:
+        craft: true
+        use: true
+        equip: true
+        pickup: false
+        inventory-move: false
+      allow-enchantments: true
+    trident:
+      unlock:
+        method: timer
+        after: 10d
+      blocking:
+        craft: true
+        use: true
+        equip: true
+        pickup: false
+        inventory-move: false
+      allow-enchantments: true
+    mace:
+      unlock:
+        method: timer
+        after: 14d
+      blocking:
+        craft: true
+        use: true
+        equip: true
+        pickup: false
+        inventory-move: false
+      allow-enchantments: true
+
+  shield:
+    default:
+      unlock:
+        method: timer
+        after: 3d
+      blocking:
+        craft: true
+        use: true
+        equip: true
+        pickup: false
+        inventory-move: false
+      allow-enchantments: true
+
+  elytra:
+    default:
+      unlock:
+        method: timer
+        after: 21d
+      blocking:
+        craft: true
+        use: true
+        equip: true
+        pickup: false
+        inventory-move: false
+      allow-enchantments: true

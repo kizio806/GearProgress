@@ -1,0 +1,228 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+env:
+  JAVA_VERSION: '21'
+
+jobs:
+  build:
+    name: Release / Build and Verify
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    outputs:
+      version: ${{ steps.metadata.outputs.version }}
+      prerelease: ${{ steps.metadata.outputs.prerelease }}
+      modrinth_type: ${{ steps.metadata.outputs.modrinth_type }}
+    steps:
+      - name: Check out complete history
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Set up Java ${{ env.JAVA_VERSION }}
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: ${{ env.JAVA_VERSION }}
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          validate-wrappers: true
+
+      - name: Read and validate release metadata
+        id: metadata
+        shell: bash
+        run: |
+          set -euo pipefail
+          VERSION="$(sed -n 's/^gearprogress.version=//p' gradle.properties | tr -d ' \r\n')"
+          test -n "$VERSION"
+          if [[ "${GITHUB_REF}" == refs/tags/* ]]; then
+            test "${GITHUB_REF_NAME}" = "v${VERSION}" || {
+              echo "::error::Tag ${GITHUB_REF_NAME} does not match project version ${VERSION}"
+              exit 1
+            }
+          fi
+          if [[ "$VERSION" == *-alpha* ]]; then
+            TYPE=alpha
+            PRERELEASE=true
+          elif [[ "$VERSION" == *-beta* || "$VERSION" == *-rc* ]]; then
+            TYPE=beta
+            PRERELEASE=true
+          else
+            TYPE=release
+            PRERELEASE=false
+          fi
+          {
+            echo "version=$VERSION"
+            echo "prerelease=$PRERELEASE"
+            echo "modrinth_type=$TYPE"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Execute complete quality gate and build distributions
+        run: ./gradlew --no-daemon clean check :distributions:paper:build :distributions:spigot:build
+
+      - name: Stage and checksum artifacts
+        shell: bash
+        env:
+          VERSION: ${{ steps.metadata.outputs.version }}
+        run: |
+          set -euo pipefail
+          mkdir -p release-artifacts
+          BASE_VERSION="${VERSION%%+*}"
+          MC_RANGE="${VERSION#*+}"
+          ARTIFACT_BASE="gearprogress"
+          cp "distributions/paper/build/libs/${ARTIFACT_BASE}-${BASE_VERSION}-${MC_RANGE}-paper-purpur-folia.jar" release-artifacts/
+          cp "distributions/spigot/build/libs/${ARTIFACT_BASE}-${BASE_VERSION}-${MC_RANGE}-spigot-bukkit.jar" release-artifacts/
+          test "$(find release-artifacts -maxdepth 1 -name "${ARTIFACT_BASE}-*.jar" | wc -l)" -eq 2
+          (cd release-artifacts && find . -type f -name "${ARTIFACT_BASE}-*.jar" -print0 | sort -z | xargs -0 sha256sum > SHA256SUMS.txt)
+          (cd release-artifacts && sha256sum -c SHA256SUMS.txt)
+
+      - name: Upload verified release inputs
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-inputs
+          path: release-artifacts/
+          if-no-files-found: error
+
+  publish:
+    name: Release / Publish
+    if: startsWith(github.ref, 'refs/tags/')
+    needs: build
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: release-inputs
+          path: release-artifacts
+
+      - name: Generate release notes
+        shell: bash
+        env:
+          VERSION: ${{ needs.build.outputs.version }}
+        run: |
+          set -euo pipefail
+          NOTES="docs/releases/${VERSION}.md"
+          if [[ -f "$NOTES" ]]; then
+            cp "$NOTES" release-notes.md
+          else
+            echo "# GearProgress ${VERSION}" > release-notes.md
+            sed -n '/^## \[Unreleased\]/,/^## \[/p' CHANGELOG.md | sed '1d;$d' >> release-notes.md || true
+          fi
+
+      - name: Publish Paper, Purpur, and Folia distribution to Modrinth
+        if: env.MODRINTH_TOKEN != ''
+        id: modrinth_paper
+        uses: Kir-Antipov/mc-publish@v3.3.2
+        env:
+          MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
+        with:
+          modrinth-id: ${{ secrets.MODRINTH_PROJECT_ID || vars.MODRINTH_PROJECT_ID }}
+          modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
+          name: GearProgress ${{ needs.build.outputs.version }} — Paper, Purpur, and Folia
+          version: ${{ needs.build.outputs.version }}.paper
+          version-type: ${{ needs.build.outputs.modrinth_type }}
+          game-versions: |
+            1.21
+            1.21.1
+            1.21.2
+            1.21.3
+            1.21.4
+            1.21.5
+            1.21.6
+            1.21.7
+            1.21.8
+            1.21.9
+            1.21.10
+            1.21.11
+          game-version-filter: releases
+          loaders: |
+            paper
+            purpur
+            folia
+          java: 21
+          environment: server
+          modrinth-featured: false
+          files: release-artifacts/gearprogress-*-paper-purpur-folia.jar
+          changelog-file: release-notes.md
+
+      - name: Publish Spigot and CraftBukkit distribution to Modrinth
+        if: env.MODRINTH_TOKEN != ''
+        id: modrinth_spigot
+        uses: Kir-Antipov/mc-publish@v3.3.2
+        env:
+          MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
+        with:
+          modrinth-id: ${{ secrets.MODRINTH_PROJECT_ID || vars.MODRINTH_PROJECT_ID }}
+          modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
+          name: GearProgress ${{ needs.build.outputs.version }} — Spigot and CraftBukkit
+          version: ${{ needs.build.outputs.version }}.spigot
+          version-type: ${{ needs.build.outputs.modrinth_type }}
+          game-versions: |
+            1.21
+            1.21.1
+            1.21.2
+            1.21.3
+            1.21.4
+            1.21.5
+            1.21.6
+            1.21.7
+            1.21.8
+            1.21.9
+            1.21.10
+            1.21.11
+          game-version-filter: releases
+          loaders: |
+            spigot
+            bukkit
+          java: 21
+          environment: server
+          modrinth-featured: false
+          files: release-artifacts/gearprogress-*-spigot-bukkit.jar
+          changelog-file: release-notes.md
+
+      - name: Create GitHub Release
+        id: github_release
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG_NAME: ${{ github.ref_name }}
+          VERSION: ${{ needs.build.outputs.version }}
+          PRERELEASE: ${{ needs.build.outputs.prerelease }}
+        run: |
+          set -euo pipefail
+          EXTRA_FLAGS=()
+          if [ "$PRERELEASE" = "true" ]; then
+            EXTRA_FLAGS+=(--prerelease)
+          else
+            EXTRA_FLAGS+=(--latest)
+          fi
+          BASE_VERSION="${VERSION%%+*}"
+          MC_RANGE="${VERSION#*+mc}"
+          gh release create "$TAG_NAME" \
+            --title "v${BASE_VERSION} — Minecraft ${MC_RANGE}" \
+            --notes-file release-notes.md \
+            "${EXTRA_FLAGS[@]}" \
+            release-artifacts/gearprogress-*.jar \
+            release-artifacts/SHA256SUMS.txt

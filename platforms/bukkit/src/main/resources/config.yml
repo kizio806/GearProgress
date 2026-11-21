@@ -1,0 +1,13 @@
+# GearProgress Main Configuration
+schema-version: 1
+
+default-locale: en-US
+check-interval-seconds: 1
+
+enable-bypass: true
+bypass-permission: gearprogress.bypass
+
+broadcast-unlocks: true
+action-bar-on-blocked: true
+chat-message-on-blocked: true
+blocked-sound: minecraft:block.chest.locked
