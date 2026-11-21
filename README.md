@@ -1,6 +1,8 @@
 # GearProgress
 
 [![CI](https://github.com/kizio806/GearProgress/actions/workflows/ci.yml/badge.svg)](https://github.com/kizio806/GearProgress/actions/workflows/ci.yml)
+[![SonarCloud Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=kizio806_GearProgress&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=kizio806_GearProgress)
+[![Codecov Coverage](https://codecov.io/gh/kizio806/GearProgress/graph/badge.svg)](https://codecov.io/gh/kizio806/GearProgress)
 [![License](https://img.shields.io/badge/License-MPL_2.0-blue.svg)](LICENSE)
 [![Java](https://img.shields.io/badge/Java-21-orange.svg)](https://adoptium.net)
 [![Minecraft](https://img.shields.io/badge/Minecraft-1.21.x-blue.svg)](https://www.minecraft.net)

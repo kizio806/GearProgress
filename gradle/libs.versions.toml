@@ -20,6 +20,7 @@ placeholderapi = "2.11.6"
 adventure-platform = "4.3.4"
 adventure = "4.17.0"
 mockito = "5.14.2"
+sonarqube = "7.5.0.8588"
 
 [libraries]
 errorprone-core = { module = "com.google.errorprone:error_prone_core", version.ref = "errorprone" }
@@ -45,3 +46,4 @@ shadow = { id = "com.gradleup.shadow", version.ref = "shadow" }
 spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
 errorprone = { id = "net.ltgt.errorprone", version.ref = "errorprone-gradle-plugin" }
 spotbugs = { id = "com.github.spotbugs", version.ref = "spotbugs-gradle-plugin" }
+sonarqube = { id = "org.sonarqube", version.ref = "sonarqube" }

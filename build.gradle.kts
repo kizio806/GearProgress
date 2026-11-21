@@ -6,6 +6,7 @@ plugins {
     base
     jacoco
     alias(libs.plugins.spotless)
+    alias(libs.plugins.sonarqube)
 }
 
 group = providers.gradleProperty("gearprogress.group").get()
@@ -305,6 +306,43 @@ val validateSourceHygiene =
         description = "Fails build on source hygiene violations in Java sources."
         commandLine("bash", "scripts/verification/validate-source-hygiene.sh")
     }
+
+sonar {
+    properties {
+        property("sonar.projectKey", "kizio806_GearProgress")
+        property("sonar.organization", "kizio806")
+        property("sonar.projectName", "GearProgress")
+        property("sonar.host.url", "https://sonarcloud.io")
+        property(
+            "sonar.coverage.exclusions",
+            "**/distributions/**,**/distributions/**/*,distributions/**,distributions/**/*,**/build-logic/**,build-logic/**",
+        )
+        property(
+            "sonar.cpd.exclusions",
+            "**/distributions/**,**/distributions/**/*,distributions/**,distributions/**/*,**/build-logic/**,build-logic/**",
+        )
+    }
+}
+
+subprojects {
+    val isContainer = subprojects.isNotEmpty()
+    val isDistribution = project.path.startsWith(":distributions")
+    sonar {
+        properties {
+            if (isContainer || isDistribution) {
+                property("sonar.coverage.exclusions", "**/*,**/*.*,**")
+                property("sonar.cpd.exclusions", "**/*,**/*.*,**")
+            } else {
+                val subprojectReport =
+                    layout.buildDirectory
+                        .file("reports/jacoco/test/jacocoTestReport.xml")
+                        .get()
+                        .asFile
+                property("sonar.coverage.jacoco.xmlReportPaths", subprojectReport.absolutePath)
+            }
+        }
+    }
+}
 
 tasks.named("check") {
     dependsOn(
