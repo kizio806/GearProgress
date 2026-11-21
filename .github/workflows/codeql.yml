@@ -39,7 +39,7 @@ jobs:
           languages: java
 
       - name: Build codebase
-        run: ./gradlew --no-daemon compileJava
+        run: ./gradlew --no-daemon --no-build-cache clean compileJava
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@33d7b85da1a04171e211befe2c739303b9a4c066 # v4.39.3
