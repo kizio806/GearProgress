@@ -26,11 +26,14 @@ tasks.processResources {
     }
 }
 
+val fullVersion = project.version.toString()
+val baseVersion = fullVersion.substringBefore('+')
+val mcRange = if (fullVersion.contains('+')) fullVersion.substringAfter('+') else "mc1.21.x"
+val artifactBaseName = providers.gradleProperty("gearprogress.artifactBaseName").getOrElse("gearprogress")
+
 val shadowJar =
     tasks.named<ShadowJar>("shadowJar") {
-        archiveBaseName.set("GearProgress")
-        archiveVersion.set(project.version.toString())
-        archiveClassifier.set("paper")
+        archiveFileName.set("$artifactBaseName-$baseVersion-$mcRange-paper-purpur-folia.jar")
         isPreserveFileTimestamps = false
         isReproducibleFileOrder = true
 

@@ -12,8 +12,8 @@ GearProgress produces **exactly two production JARs** built via `./gradlew build
 
 | Distribution Family | Production Artifact | Target Server Platforms | Supported Minecraft Versions | Default Compile Target | Java Baseline | Status |
 |---|---|---|---|---|---|---|
-| **Paper Family** | `GearProgress-<version>-paper.jar` | **Paper**, **Purpur**, **Folia** | **1.21 – 1.21.11** | Paper 1.21.11 | **Java 21** | **Active (Primary)** |
-| **Spigot Family** | `GearProgress-<version>-spigot.jar` | **Spigot**, **CraftBukkit** | **1.21 – 1.21.11** | Spigot 1.21 | **Java 21** | **Active** |
+| **Paper Family** | `gearprogress-<base>-<range>-paper-purpur-folia.jar` | **Paper**, **Purpur**, **Folia** | **1.21 – 1.21.11** | Paper 1.21.11 | **Java 21** | **Active (Primary)** |
+| **Spigot Family** | `gearprogress-<base>-<range>-spigot-bukkit.jar` | **Spigot**, **CraftBukkit** | **1.21 – 1.21.11** | Spigot 1.21 | **Java 21** | **Active** |
 
 ---
 
@@ -23,11 +23,11 @@ Every declared combination of server runtime and Minecraft version in the 1.21.x
 
 | Server Platform | Platform Family | Minecraft Versions | Production Artifact | Scheduling Model | Status |
 |---|---|---|---|---|---|
-| **Paper** | Paper | **1.21 – 1.21.11** | `GearProgress-<version>-paper.jar` | Async scheduler (`getAsyncScheduler`) | **VERIFIED (PASS)** |
-| **Purpur** | Paper | **1.21 – 1.21.11** | `GearProgress-<version>-paper.jar` | Async scheduler (`getAsyncScheduler`) | **VERIFIED (PASS)** |
-| **Folia** | Paper | **1.21 – 1.21.11** | `GearProgress-<version>-paper.jar` | Global region scheduler (`getGlobalRegionScheduler`) | **VERIFIED (PASS)** |
-| **Spigot** | Spigot | **1.21 – 1.21.11** | `GearProgress-<version>-spigot.jar` | Standard server scheduler (`BukkitScheduler`) | **VERIFIED (PASS)** |
-| **CraftBukkit** | Spigot | **1.21 – 1.21.11** | `GearProgress-<version>-spigot.jar` | Standard server scheduler (`BukkitScheduler`) | **VERIFIED (PASS)** |
+| **Paper** | Paper | **1.21 – 1.21.11** | `gearprogress-<base>-<range>-paper-purpur-folia.jar` | Async scheduler (`getAsyncScheduler`) | **VERIFIED (PASS)** |
+| **Purpur** | Paper | **1.21 – 1.21.11** | `gearprogress-<base>-<range>-paper-purpur-folia.jar` | Async scheduler (`getAsyncScheduler`) | **VERIFIED (PASS)** |
+| **Folia** | Paper | **1.21 – 1.21.11** | `gearprogress-<base>-<range>-paper-purpur-folia.jar` | Global region scheduler (`getGlobalRegionScheduler`) | **VERIFIED (PASS)** |
+| **Spigot** | Spigot | **1.21 – 1.21.11** | `gearprogress-<base>-<range>-spigot-bukkit.jar` | Standard server scheduler (`BukkitScheduler`) | **VERIFIED (PASS)** |
+| **CraftBukkit** | Spigot | **1.21 – 1.21.11** | `gearprogress-<base>-<range>-spigot-bukkit.jar` | Standard server scheduler (`BukkitScheduler`) | **VERIFIED (PASS)** |
 
 ---
 
@@ -40,7 +40,7 @@ Every declared combination of server runtime and Minecraft version in the 1.21.x
 
 ## 4. Folia Architecture & Regional Threading
 
-Folia builds for Minecraft 1.21 – 1.21.11 are supported natively by the Paper distribution artifact (`GearProgress-<version>-paper.jar`):
+Folia builds for Minecraft 1.21 – 1.21.11 are supported natively by the Paper distribution artifact (`gearprogress-<base>-<range>-paper-purpur-folia.jar`):
 
 - **Folia Flag:** Declares `folia-supported: true` in `plugin.yml`.
 - **Region Scheduling:** Folia uses `GlobalRegionScheduler` for thread-safe execution across regions without race conditions.

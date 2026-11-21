@@ -33,8 +33,9 @@ Future AI agents working in this repository must operate as **experienced senior
    - `:platforms:bukkit`: Shared Bukkit event listeners, item classification, audience-based messaging, and PlaceholderAPI expansion.
    - `:platforms:paper:common`: Paper/Purpur/Folia platform adapter. Brigadier commands, Folia-safe schedulers.
    - `:platforms:spigot:common`: Spigot/CraftBukkit platform adapter. Standard Bukkit commands, BukkitScheduler, relocated Adventure.
-   - `:distributions:paper`: Shaded release packaging (`GearProgress-<version>-paper.jar`).
-   - `:distributions:spigot`: Shaded release packaging (`GearProgress-<version>-spigot.jar`).
+   - `:distributions:paper`: Shaded release packaging (`gearprogress-<base>-<range>-paper-purpur-folia.jar`).
+   - `:distributions:spigot`: Shaded release packaging (`gearprogress-<base>-<range>-spigot-bukkit.jar`).
+   - Versioning Standard: Strict `MAJOR.MINOR.PATCH+mc<RANGE>` (see `.agents/rules/versioning-and-releases.md`).
 
 ---
 

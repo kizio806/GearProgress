@@ -13,8 +13,8 @@
 - **Granular Restrictions**: Independently toggle blocking for `craft`, `use`, `equip`, `pickup`, and `inventory move`.
 - **Enchantment Control**: Configure whether enchantments are allowed on a tier-by-tier basis (e.g. Diamond tier allowed without enchantments first, then enchantments unlocked later).
 - **Dual Platform Support**:
-  - Paper, Purpur, and Folia via `GearProgress-<version>-paper.jar` (native Brigadier commands & Folia schedulers).
-  - Spigot and CraftBukkit via `GearProgress-<version>-spigot.jar` (standard Bukkit commands & relocated Adventure).
+  - Paper, Purpur, and Folia via `gearprogress-<base>-<range>-paper-purpur-folia.jar` (native Brigadier commands & Folia schedulers).
+  - Spigot and CraftBukkit via `gearprogress-<base>-<range>-spigot-bukkit.jar` (standard Bukkit commands & relocated Adventure).
 - **PlaceholderAPI Integration**: Exposes stage, time remaining, and unlock statuses for scoreboards, tabs, and menus.
 - **Adventure MiniMessage Localization**: Ships with English (`en-US`) and Polish (`pl-PL`) catalogs.
 - **Clean Hexagonal Architecture**: Engineered with pure Java domain boundaries, single-writer SQLite persistence, and zero singletons.

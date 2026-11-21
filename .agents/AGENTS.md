@@ -24,6 +24,7 @@ The `.agents/` directory defines specialized operational roles, context indexes,
 ### 3. Rules (`.agents/rules/`)
 - [`architecture-and-boundaries.md`](rules/architecture-and-boundaries.md) — Hexagonal isolation and zero server imports in core.
 - [`quality-gates-and-testing.md`](rules/quality-gates-and-testing.md) — Static analysis, zero warnings, and test coverage standards.
+- [`versioning-and-releases.md`](rules/versioning-and-releases.md) — Authoritative SemVer, multi-platform artifact packaging, and release standards.
 - [`source-hygiene-and-comments.md`](rules/source-hygiene-and-comments.md) — Zero `TODO`, wildcard imports, or `@SuppressWarnings`.
 - [`concurrency-and-folia.md`](rules/concurrency-and-folia.md) — Regionized scheduler safety and non-blocking tick threads.
 - [`sqlite-and-transactions.md`](rules/sqlite-and-transactions.md) — Single-writer executor, WAL mode, and parameterized queries.
