@@ -78,14 +78,21 @@ armor:
       inventory-move: true
 ```
 
-## Documentation
+## Documentation & Governance
 - [Architecture Guide](docs/architecture.md)
 - [Compatibility Matrix](docs/compatibility-matrix.md)
 - [Installation Guide](docs/installation.md)
 - [Development Guide](docs/development.md)
 - [Release Process](docs/releases.md)
 - [Troubleshooting](docs/troubleshooting.md)
-- [Wiki](docs/wiki/Home.md)
+- [Wiki Documentation](docs/wiki/Home.md)
+- [Roadmap](ROADMAP.md)
+- [Support Policy](SUPPORT.md)
+- [Contributing Guidelines](CONTRIBUTING.md)
+- [Code of Conduct](CODE_OF_CONDUCT.md)
+- [Security Policy](SECURITY.md)
+- [Changelog](CHANGELOG.md)
+- [AI Guidelines & Architecture Manual](AGENTS.md)
 
 ## License
 GearProgress is licensed under the [Mozilla Public License Version 2.0 (MPL-2.0)](LICENSE).

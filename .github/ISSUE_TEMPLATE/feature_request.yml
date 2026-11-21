@@ -1,0 +1,35 @@
+name: ✨ Feature Request
+description: Propose a new feature, restriction type, unlock mechanism, or integration.
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for suggesting an improvement for **GearProgress**!
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem Statement
+      description: Is your feature request related to a specific limitation or use case?
+      placeholder: "Currently, server administrators cannot..."
+    validations:
+      required: true
+  - type: textarea
+    id: proposed_solution
+    attributes:
+      label: Proposed Solution
+      description: Describe the solution or new feature you would like to see.
+      placeholder: "Add support for..."
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives Considered
+      description: Describe any alternative solutions or workarounds you've explored.
+  - type: textarea
+    id: additional_context
+    attributes:
+      label: Additional Context
+      description: Add any relevant mockups, YAML examples, or references.
