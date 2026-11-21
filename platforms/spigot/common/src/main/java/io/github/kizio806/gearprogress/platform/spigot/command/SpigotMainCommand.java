@@ -42,11 +42,12 @@ public final class SpigotMainCommand implements CommandExecutor, TabCompleter {
   @Override
   public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
     if (args.length == 0 || "help".equalsIgnoreCase(args[0])) {
-      return handleHelp(sender);
+      handleHelp(sender);
+      return true;
     }
 
     String sub = args[0].toLowerCase(Locale.ROOT);
-    return switch (sub) {
+    switch (sub) {
       case "reload" -> handleReload(sender);
       case "unlock" -> handleUnlock(sender, args);
       case "lock" -> handleLock(sender, args);
@@ -54,11 +55,9 @@ public final class SpigotMainCommand implements CommandExecutor, TabCompleter {
       case "info" -> handleInfo(sender, args);
       case "status" -> handleStatus(sender);
       case "timer" -> handleTimer(sender, args);
-      default -> {
-        helper.send(sender, "general.unknown-command");
-        yield true;
-      }
-    };
+      default -> helper.send(sender, "general.unknown-command");
+    }
+    return true;
   }
 
   @Override
@@ -104,9 +103,9 @@ public final class SpigotMainCommand implements CommandExecutor, TabCompleter {
     return Collections.emptyList();
   }
 
-  private boolean handleHelp(CommandSender sender) {
+  private void handleHelp(CommandSender sender) {
     if (!helper.requirePermission(sender, "gearprogress.use")) {
-      return true;
+      return;
     }
     helper.sendMessage(
         sender, Component.text("=== GearProgress Commands ===", NamedTextColor.GOLD));
@@ -146,12 +145,11 @@ public final class SpigotMainCommand implements CommandExecutor, TabCompleter {
               "/gearprogress timer <add|set|status|pause|resume> ... - Manage timers",
               NamedTextColor.AQUA));
     }
-    return true;
   }
 
-  private boolean handleReload(CommandSender sender) {
+  private void handleReload(CommandSender sender) {
     if (!helper.requirePermission(sender, "gearprogress.reload")) {
-      return true;
+      return;
     }
     try {
       application.reload();
@@ -161,92 +159,88 @@ public final class SpigotMainCommand implements CommandExecutor, TabCompleter {
           sender,
           Component.text("Failed to reload configuration: " + ex.getMessage(), NamedTextColor.RED));
     }
-    return true;
   }
 
-  private boolean handleUnlock(CommandSender sender, String[] args) {
+  private void handleUnlock(CommandSender sender, String[] args) {
     if (!helper.requirePermission(sender, "gearprogress.admin")) {
-      return true;
+      return;
     }
     if (args.length < 3) {
       helper.sendMessage(
           sender,
           Component.text("Usage: /gearprogress unlock <category> <tier>", NamedTextColor.RED));
-      return true;
+      return;
     }
     TierKey key = parseKey(args[1], args[2]);
     if (key == null) {
       helper.send(sender, "command.invalid-tier", Map.of("category", args[1], "tier", args[2]));
-      return true;
+      return;
     }
     application.progressionService().unlock(key, UnlockMethod.COMMAND, sender.getName()).join();
     helper.send(
         sender,
         "command.unlock.success",
         Map.of("category", key.category().id(), "tier", key.tier()));
-    return true;
   }
 
-  private boolean handleLock(CommandSender sender, String[] args) {
+  private void handleLock(CommandSender sender, String[] args) {
     if (!helper.requirePermission(sender, "gearprogress.admin")) {
-      return true;
+      return;
     }
     if (args.length < 3) {
       helper.sendMessage(
           sender,
           Component.text("Usage: /gearprogress lock <category> <tier>", NamedTextColor.RED));
-      return true;
+      return;
     }
     TierKey key = parseKey(args[1], args[2]);
     if (key == null) {
       helper.send(sender, "command.invalid-tier", Map.of("category", args[1], "tier", args[2]));
-      return true;
+      return;
     }
     application.progressionService().lock(key, sender.getName()).join();
     helper.send(
         sender,
         "command.lock.success",
         Map.of("category", key.category().id(), "tier", key.tier()));
-    return true;
   }
 
-  private boolean handleReset(CommandSender sender, String[] args) {
+  private void handleReset(CommandSender sender, String[] args) {
     if (!helper.requirePermission(sender, "gearprogress.admin")) {
-      return true;
+      return;
     }
     if (args.length < 3) {
       helper.sendMessage(
           sender,
           Component.text("Usage: /gearprogress reset <category> <tier>", NamedTextColor.RED));
-      return true;
+      return;
     }
     TierKey key = parseKey(args[1], args[2]);
     if (key == null) {
       helper.send(sender, "command.invalid-tier", Map.of("category", args[1], "tier", args[2]));
-      return true;
+      return;
     }
     application.progressionService().lock(key, sender.getName()).join();
     helper.send(
         sender,
         "command.reset.success",
         Map.of("category", key.category().id(), "tier", key.tier()));
-    return true;
   }
 
-  private boolean handleInfo(CommandSender sender, String[] args) {
+  private void handleInfo(CommandSender sender, String[] args) {
     if (!helper.requirePermission(sender, "gearprogress.use")) {
-      return true;
+      return;
     }
     if (args.length < 3) {
       helper.sendMessage(
           sender,
           Component.text("Usage: /gearprogress info <category> <tier>", NamedTextColor.RED));
-      return true;
+      return;
     }
     TierKey key = parseKey(args[1], args[2]);
     if (key == null) {
       helper.send(sender, "command.invalid-tier", Map.of("category", args[1], "tier", args[2]));
-      return true;
+      return;
     }
     boolean unlocked = application.progressionService().isUnlocked(key);
     Optional<TimeRemaining> remaining = application.timerService().timeRemaining(key);
@@ -266,12 +260,11 @@ public final class SpigotMainCommand implements CommandExecutor, TabCompleter {
           Component.text(
               "Time Remaining: " + remaining.get().formatHuman(), NamedTextColor.YELLOW));
     }
-    return true;
   }
 
-  private boolean handleStatus(CommandSender sender) {
+  private void handleStatus(CommandSender sender) {
     if (!helper.requirePermission(sender, "gearprogress.use")) {
-      return true;
+      return;
     }
     helper.sendMessage(
         sender, Component.text("=== GearProgress Progression Status ===", NamedTextColor.GOLD));
@@ -296,33 +289,32 @@ public final class SpigotMainCommand implements CommandExecutor, TabCompleter {
       }
       helper.sendMessage(sender, line);
     }
-    return true;
   }
 
-  private boolean handleTimer(CommandSender sender, String[] args) {
+  private void handleTimer(CommandSender sender, String[] args) {
     if (args.length < 2) {
       helper.sendMessage(
           sender,
           Component.text(
               "Usage: /gearprogress timer <add|set|status|pause|resume> ...", NamedTextColor.RED));
-      return true;
+      return;
     }
     String action = args[1].toLowerCase(Locale.ROOT);
     if ("status".equals(action)) {
       if (!helper.requirePermission(sender, "gearprogress.use")) {
-        return true;
+        return;
       }
       if (args.length < 4) {
         helper.sendMessage(
             sender,
             Component.text(
                 "Usage: /gearprogress timer status <category> <tier>", NamedTextColor.RED));
-        return true;
+        return;
       }
       TierKey key = parseKey(args[2], args[3]);
       if (key == null) {
         helper.send(sender, "command.invalid-tier", Map.of("category", args[2], "tier", args[3]));
-        return true;
+        return;
       }
       Optional<TimeRemaining> remaining = application.timerService().timeRemaining(key);
       boolean paused = application.timerService().isPaused(key);
@@ -332,11 +324,11 @@ public final class SpigotMainCommand implements CommandExecutor, TabCompleter {
           Component.text(
               "Timer for " + key + ": " + timeText + (paused ? " [PAUSED]" : ""),
               NamedTextColor.YELLOW));
-      return true;
+      return;
     }
 
     if (!helper.requirePermission(sender, "gearprogress.admin")) {
-      return true;
+      return;
     }
 
     if ("pause".equals(action)) {
@@ -345,19 +337,19 @@ public final class SpigotMainCommand implements CommandExecutor, TabCompleter {
             sender,
             Component.text(
                 "Usage: /gearprogress timer pause <category> <tier>", NamedTextColor.RED));
-        return true;
+        return;
       }
       TierKey key = parseKey(args[2], args[3]);
       if (key == null) {
         helper.send(sender, "command.invalid-tier", Map.of("category", args[2], "tier", args[3]));
-        return true;
+        return;
       }
       application.timerService().pause(key);
       helper.send(
           sender,
           "command.timer.paused",
           Map.of("category", key.category().id(), "tier", key.tier()));
-      return true;
+      return;
     }
 
     if ("resume".equals(action)) {
@@ -366,19 +358,19 @@ public final class SpigotMainCommand implements CommandExecutor, TabCompleter {
             sender,
             Component.text(
                 "Usage: /gearprogress timer resume <category> <tier>", NamedTextColor.RED));
-        return true;
+        return;
       }
       TierKey key = parseKey(args[2], args[3]);
       if (key == null) {
         helper.send(sender, "command.invalid-tier", Map.of("category", args[2], "tier", args[3]));
-        return true;
+        return;
       }
       application.timerService().resume(key);
       helper.send(
           sender,
           "command.timer.resumed",
           Map.of("category", key.category().id(), "tier", key.tier()));
-      return true;
+      return;
     }
 
     if (args.length < 5) {
@@ -387,12 +379,12 @@ public final class SpigotMainCommand implements CommandExecutor, TabCompleter {
           Component.text(
               "Usage: /gearprogress timer " + action + " <category> <tier> <duration>",
               NamedTextColor.RED));
-      return true;
+      return;
     }
     TierKey key = parseKey(args[2], args[3]);
     if (key == null) {
       helper.send(sender, "command.invalid-tier", Map.of("category", args[2], "tier", args[3]));
-      return true;
+      return;
     }
     Duration duration;
     try {
@@ -400,7 +392,7 @@ public final class SpigotMainCommand implements CommandExecutor, TabCompleter {
     } catch (IllegalArgumentException ex) {
       helper.sendMessage(
           sender, Component.text("Invalid duration format: " + args[4], NamedTextColor.RED));
-      return true;
+      return;
     }
 
     if ("add".equals(action)) {
@@ -409,7 +401,7 @@ public final class SpigotMainCommand implements CommandExecutor, TabCompleter {
           sender,
           "command.timer.adjusted",
           Map.of("category", key.category().id(), "tier", key.tier(), "time", args[4]));
-      return true;
+      return;
     }
     if ("set".equals(action)) {
       application.timerService().setElapsed(key, duration);
@@ -417,14 +409,13 @@ public final class SpigotMainCommand implements CommandExecutor, TabCompleter {
           sender,
           "command.timer.adjusted",
           Map.of("category", key.category().id(), "tier", key.tier(), "time", args[4]));
-      return true;
+      return;
     }
 
     helper.sendMessage(
         sender,
         Component.text(
             "Unknown timer action. Use: add, set, status, pause, resume", NamedTextColor.RED));
-    return true;
   }
 
   private TierKey parseKey(String categoryStr, String tierStr) {

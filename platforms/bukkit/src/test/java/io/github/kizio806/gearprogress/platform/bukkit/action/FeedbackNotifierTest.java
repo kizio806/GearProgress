@@ -1,5 +1,6 @@
 package io.github.kizio806.gearprogress.platform.bukkit.action;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -137,7 +138,10 @@ class FeedbackNotifierTest {
   @DisplayName("Null player does not throw exception")
   void testNullPlayerSafelyHandled() {
     TierKey key = TierKey.of(EquipmentCategory.ARMOR, "diamond");
-    notifier.notifyRestricted(null, key, RestrictionType.CRAFT);
-    notifier.notifyEnchantmentForbidden(null, key);
+    assertDoesNotThrow(
+        () -> {
+          notifier.notifyRestricted(null, key, RestrictionType.CRAFT);
+          notifier.notifyEnchantmentForbidden(null, key);
+        });
   }
 }

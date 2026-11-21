@@ -90,7 +90,7 @@ public final class MockBukkitSetup {
                                   }
                                   return null;
                                 }
-                                if ("ScheduledTask".equals(rm.getReturnType().getSimpleName())) {
+                                if (rm.getReturnType().isInterface()) {
                                   return Proxy.newProxyInstance(
                                       rm.getReturnType().getClassLoader(),
                                       new Class<?>[] {rm.getReturnType()},
