@@ -1,9 +1,5 @@
 # GearProgress
 
-<p align="center">
-  <img src="docs/assets/icon.png" width="128" height="128" alt="GearProgress Icon">
-</p>
-
 [![CI](https://github.com/kizio806/GearProgress/actions/workflows/ci.yml/badge.svg)](https://github.com/kizio806/GearProgress/actions/workflows/ci.yml)
 [![SonarCloud Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=kizio806_GearProgress&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=kizio806_GearProgress)
 [![Codecov Coverage](https://codecov.io/gh/kizio806/GearProgress/graph/badge.svg)](https://codecov.io/gh/kizio806/GearProgress)
