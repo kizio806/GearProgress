@@ -119,6 +119,23 @@ public final class MockBukkitSetup {
                                   });
                       case "isPrimaryThread" -> true;
                       case "broadcast" -> 0;
+                      case "createInventory" -> {
+                        org.bukkit.inventory.InventoryHolder holder =
+                            args != null
+                                    && args.length > 0
+                                    && args[0] instanceof org.bukkit.inventory.InventoryHolder h
+                                ? h
+                                : null;
+                        int size =
+                            args != null && args.length > 1 && args[1] instanceof Integer s
+                                ? s
+                                : 54;
+                        String title =
+                            args != null && args.length > 2 && args[2] instanceof String t
+                                ? t
+                                : "Inventory";
+                        yield createMockInventory(holder, size, title);
+                      }
                       default -> null;
                     };
                   });
@@ -271,6 +288,35 @@ public final class MockBukkitSetup {
                 case "getName" -> name;
                 case "getUID" -> worldId;
                 case "getSpawnLocation" -> new Location((World) proxy, 0.0, 64.0, 0.0);
+                default -> null;
+              };
+            });
+  }
+
+  public static org.bukkit.inventory.Inventory createMockInventory(
+      org.bukkit.inventory.InventoryHolder holder, int size, String title) {
+    org.bukkit.inventory.ItemStack[] contents = new org.bukkit.inventory.ItemStack[size];
+    return (org.bukkit.inventory.Inventory)
+        Proxy.newProxyInstance(
+            org.bukkit.inventory.Inventory.class.getClassLoader(),
+            new Class<?>[] {org.bukkit.inventory.Inventory.class},
+            (proxy, method, args) -> {
+              return switch (method.getName()) {
+                case "getSize" -> size;
+                case "getHolder" -> holder;
+                case "getItem" -> {
+                  int slot = (Integer) args[0];
+                  yield (slot >= 0 && slot < size) ? contents[slot] : null;
+                }
+                case "setItem" -> {
+                  int slot = (Integer) args[0];
+                  org.bukkit.inventory.ItemStack item = (org.bukkit.inventory.ItemStack) args[1];
+                  if (slot >= 0 && slot < size) {
+                    contents[slot] = item;
+                  }
+                  yield null;
+                }
+                case "getContents" -> contents.clone();
                 default -> null;
               };
             });

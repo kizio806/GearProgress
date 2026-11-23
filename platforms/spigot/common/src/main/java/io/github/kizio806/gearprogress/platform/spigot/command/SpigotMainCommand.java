@@ -7,6 +7,7 @@ import io.github.kizio806.gearprogress.core.model.tier.TierKey;
 import io.github.kizio806.gearprogress.core.model.unlock.UnlockMethod;
 import io.github.kizio806.gearprogress.core.time.RelativeDurationParser;
 import io.github.kizio806.gearprogress.core.time.TimeRemaining;
+import io.github.kizio806.gearprogress.platform.bukkit.gui.ProgressionGuiView;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -22,21 +23,29 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
+import org.bukkit.entity.Player;
 
 /** Main command executor and tab completer for /gearprogress on Spigot/Bukkit. */
 public final class SpigotMainCommand implements CommandExecutor, TabCompleter {
 
   private static final List<String> ROOT_SUBCOMMANDS =
-      List.of("reload", "unlock", "lock", "timer", "reset", "info", "status", "help");
+      List.of("reload", "unlock", "lock", "timer", "reset", "info", "status", "view", "help");
   private static final List<String> TIMER_SUBCOMMANDS =
       List.of("add", "set", "status", "pause", "resume");
 
   private final GearProgressApplication application;
   private final SpigotCommandHelper helper;
+  private final ProgressionGuiView gui;
 
   public SpigotMainCommand(GearProgressApplication application, SpigotCommandHelper helper) {
+    this(application, helper, new ProgressionGuiView(application));
+  }
+
+  public SpigotMainCommand(
+      GearProgressApplication application, SpigotCommandHelper helper, ProgressionGuiView gui) {
     this.application = Objects.requireNonNull(application, "application must not be null");
     this.helper = Objects.requireNonNull(helper, "helper must not be null");
+    this.gui = Objects.requireNonNull(gui, "gui must not be null");
   }
 
   @Override
@@ -54,6 +63,7 @@ public final class SpigotMainCommand implements CommandExecutor, TabCompleter {
       case "reset" -> handleReset(sender, args);
       case "info" -> handleInfo(sender, args);
       case "status" -> handleStatus(sender);
+      case "view" -> handleView(sender);
       case "timer" -> handleTimer(sender, args);
       default -> {
         helper.send(sender, "general.unknown-command");
@@ -116,6 +126,10 @@ public final class SpigotMainCommand implements CommandExecutor, TabCompleter {
         sender,
         Component.text(
             "/gearprogress status - View equipment unlock status", NamedTextColor.YELLOW));
+    helper.sendMessage(
+        sender,
+        Component.text(
+            "/gearprogress view - Open interactive progression GUI", NamedTextColor.YELLOW));
     helper.sendMessage(
         sender,
         Component.text(
@@ -292,6 +306,19 @@ public final class SpigotMainCommand implements CommandExecutor, TabCompleter {
       }
       helper.sendMessage(sender, line);
     }
+  }
+
+  private void handleView(CommandSender sender) {
+    if (!(sender instanceof Player player)) {
+      helper.sendMessage(
+          sender,
+          Component.text("Only players can open the progression view GUI.", NamedTextColor.RED));
+      return;
+    }
+    if (!helper.requirePermission(sender, "gearprogress.use")) {
+      return;
+    }
+    gui.open(player);
   }
 
   private void handleTimer(CommandSender sender, String[] args) {

@@ -88,7 +88,6 @@ armor:
 - [Release Process](docs/releases.md)
 - [Troubleshooting](docs/troubleshooting.md)
 - [Wiki Documentation](docs/wiki/Home.md)
-- [Roadmap](ROADMAP.md)
 - [Support Policy](SUPPORT.md)
 - [Contributing Guidelines](CONTRIBUTING.md)
 - [Code of Conduct](CODE_OF_CONDUCT.md)

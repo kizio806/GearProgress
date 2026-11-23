@@ -11,6 +11,7 @@ import io.github.kizio806.gearprogress.core.model.category.EquipmentCategory;
 import io.github.kizio806.gearprogress.core.model.rule.RestrictionType;
 import io.github.kizio806.gearprogress.core.model.tier.TierKey;
 import io.github.kizio806.gearprogress.core.time.TimeRemaining;
+import io.github.kizio806.gearprogress.platform.bukkit.gui.ProgressionGuiView;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
 import java.util.ArrayList;
@@ -21,6 +22,7 @@ import java.util.Optional;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 /** Main Brigadier command tree root for /gearprogress on the Paper platform. */
 public final class GearProgressMainCommand {
@@ -29,10 +31,17 @@ public final class GearProgressMainCommand {
   private final CommandText messages;
   private final ProgressionCommandHandler progressionHandler;
   private final TimerCommandHandler timerHandler;
+  private final ProgressionGuiView gui;
 
   public GearProgressMainCommand(GearProgressApplication application, LocaleCatalog locales) {
+    this(application, locales, new ProgressionGuiView(application));
+  }
+
+  public GearProgressMainCommand(
+      GearProgressApplication application, LocaleCatalog locales, ProgressionGuiView gui) {
     this.application = Objects.requireNonNull(application, "application must not be null");
     this.messages = new CommandText(Objects.requireNonNull(locales, "locales must not be null"));
+    this.gui = Objects.requireNonNull(gui, "gui must not be null");
     this.progressionHandler = new ProgressionCommandHandler(application, messages);
     this.timerHandler = new TimerCommandHandler(application, messages);
   }
@@ -72,6 +81,10 @@ public final class GearProgressMainCommand {
                 .requires(s -> hasUsePerm(s.getSender()))
                 .executes(this::executeStatus))
         .then(
+            Commands.literal("view")
+                .requires(s -> hasUsePerm(s.getSender()))
+                .executes(this::executeView))
+        .then(
             Commands.literal("info")
                 .requires(s -> hasUsePerm(s.getSender()))
                 .then(
@@ -95,6 +108,7 @@ public final class GearProgressMainCommand {
     CommandSender sender = ctx.getSource().getSender();
     messages.send(sender, "command.help.header");
     messages.send(sender, "command.help.status");
+    messages.send(sender, "command.help.view");
     messages.send(sender, "command.help.info");
     if (hasAdminPerm(sender)) {
       messages.send(sender, "command.help.unlock");
@@ -133,6 +147,17 @@ public final class GearProgressMainCommand {
 
       messages.send(sender, "command.status.entry", placeholders);
     }
+    return 1;
+  }
+
+  private int executeView(CommandContext<CommandSourceStack> ctx) {
+    CommandSender sender = ctx.getSource().getSender();
+    if (!(sender instanceof Player player)) {
+      sender.sendMessage(
+          Component.text("Only players can open the progression view GUI.", NamedTextColor.RED));
+      return 0;
+    }
+    gui.open(player);
     return 1;
   }
 
