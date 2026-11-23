@@ -23,6 +23,7 @@ command:
   help:
     header: "<gold>=== Komendy GearProgress ===</gold>"
     status: "<yellow>/gp status</yellow> <gray>- Przeglad stanu progresji serwera</gray>"
+    view: "<yellow>/gp view</yellow> <gray>- Otworz interaktywne menu postepu</gray>"
     info: "<yellow>/gp info [category] [tier]</yellow> <gray>- Szczegolowe informacje o poziomie</gray>"
     unlock: "<yellow>/gp unlock <category> <tier></yellow> <gray>- Reczne odblokowanie poziomu</gray>"
     lock: "<yellow>/gp lock <category> <tier></yellow> <gray>- Reczne zablokowanie poziomu</gray>"

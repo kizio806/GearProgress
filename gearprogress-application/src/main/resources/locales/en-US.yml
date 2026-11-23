@@ -23,6 +23,7 @@ command:
   help:
     header: "<gold>=== GearProgress Commands ===</gold>"
     status: "<yellow>/gp status</yellow> <gray>- View overall progression overview</gray>"
+    view: "<yellow>/gp view</yellow> <gray>- Open interactive progression GUI</gray>"
     info: "<yellow>/gp info [category] [tier]</yellow> <gray>- View detailed tier status</gray>"
     unlock: "<yellow>/gp unlock <category> <tier></yellow> <gray>- Manually unlock a tier</gray>"
     lock: "<yellow>/gp lock <category> <tier></yellow> <gray>- Manually lock a tier</gray>"

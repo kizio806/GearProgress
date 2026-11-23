@@ -1,6 +1,7 @@
 package io.github.kizio806.gearprogress.platform.paper.command;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -19,6 +20,7 @@ import io.github.kizio806.gearprogress.core.model.tier.TierKey;
 import io.github.kizio806.gearprogress.core.model.unlock.UnlockCondition;
 import io.github.kizio806.gearprogress.core.model.unlock.UnlockMethod;
 import io.github.kizio806.gearprogress.core.time.TimeRemaining;
+import io.github.kizio806.gearprogress.platform.bukkit.gui.ProgressionGuiView;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import java.time.Duration;
 import java.util.ArrayList;
@@ -63,6 +65,7 @@ class GearProgressMainCommandTest {
     map.put("general.plugin-reloaded", "Reloaded successfully.");
     map.put("command.help.header", "Help Header");
     map.put("command.help.status", "Status Help");
+    map.put("command.help.view", "View Help");
     map.put("command.help.info", "Info Help");
     map.put("command.help.unlock", "Unlock Help");
     map.put("command.help.lock", "Lock Help");
@@ -219,5 +222,27 @@ class GearProgressMainCommandTest {
   void testReload() throws Exception {
     dispatcher.execute("gearprogress reload", source);
     verify(application).reload();
+  }
+
+  @Test
+  @DisplayName("Executing /gearprogress view opens GUI for player and informs console")
+  void testView() throws Exception {
+    ProgressionGuiView mockGui = mock(ProgressionGuiView.class);
+    GearProgressMainCommand customCmd = new GearProgressMainCommand(application, locales, mockGui);
+    CommandDispatcher<CommandSourceStack> testDispatcher =
+        PaperCommandTestSupport.createDispatcher();
+    testDispatcher.register(customCmd.buildCommand());
+
+    // Console execution
+    testDispatcher.execute("gearprogress view", source);
+    verify(mockGui, org.mockito.Mockito.never()).open(any());
+
+    // Player execution
+    org.bukkit.entity.Player player = mock(org.bukkit.entity.Player.class);
+    when(player.hasPermission("gearprogress.use")).thenReturn(true);
+    CommandSourceStack playerSource = PaperCommandTestSupport.createMockSource(player);
+
+    testDispatcher.execute("gearprogress view", playerSource);
+    verify(mockGui).open(player);
   }
 }

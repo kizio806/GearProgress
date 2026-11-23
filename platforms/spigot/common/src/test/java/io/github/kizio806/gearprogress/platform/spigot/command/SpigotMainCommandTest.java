@@ -17,6 +17,7 @@ import io.github.kizio806.gearprogress.application.service.TimerService;
 import io.github.kizio806.gearprogress.core.model.category.EquipmentCategory;
 import io.github.kizio806.gearprogress.core.model.tier.TierKey;
 import io.github.kizio806.gearprogress.core.time.TimeRemaining;
+import io.github.kizio806.gearprogress.platform.bukkit.gui.ProgressionGuiView;
 import java.io.IOException;
 import java.time.Duration;
 import java.util.List;
@@ -282,6 +283,28 @@ class SpigotMainCommandTest {
             command,
             "gp",
             new String[] {"timer", "unknownaction", "armor", "diamond", "1h"}));
+  }
+
+  @Test
+  @DisplayName("handleView opens GUI for player and rejects console")
+  void testViewSubcommand() {
+    ProgressionGuiView mockGui = mock(ProgressionGuiView.class);
+    SpigotMainCommand cmdWithGui = new SpigotMainCommand(application, helper, mockGui);
+
+    // Console sender
+    assertTrue(cmdWithGui.onCommand(sender, command, "gp", new String[] {"view"}));
+    verify(mockGui, org.mockito.Mockito.never()).open(any());
+
+    // Player with permission
+    org.bukkit.entity.Player player = mock(org.bukkit.entity.Player.class);
+    when(helper.requirePermission(player, "gearprogress.use")).thenReturn(true);
+    assertTrue(cmdWithGui.onCommand(player, command, "gp", new String[] {"view"}));
+    verify(mockGui).open(player);
+
+    // Player without permission
+    org.bukkit.entity.Player playerNoPerm = mock(org.bukkit.entity.Player.class);
+    when(helper.requirePermission(playerNoPerm, "gearprogress.use")).thenReturn(false);
+    assertTrue(cmdWithGui.onCommand(playerNoPerm, command, "gp", new String[] {"view"}));
   }
 
   @Test

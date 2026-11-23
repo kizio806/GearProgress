@@ -16,6 +16,7 @@ import io.github.kizio806.gearprogress.platform.bukkit.action.InventoryMoveRestr
 import io.github.kizio806.gearprogress.platform.bukkit.action.PickupRestrictionListener;
 import io.github.kizio806.gearprogress.platform.bukkit.action.UseRestrictionListener;
 import io.github.kizio806.gearprogress.platform.bukkit.event.BukkitEventPublisher;
+import io.github.kizio806.gearprogress.platform.bukkit.gui.ProgressionGuiListener;
 import io.github.kizio806.gearprogress.platform.bukkit.lifecycle.BukkitBootstrapLifecycle;
 import io.github.kizio806.gearprogress.platform.bukkit.lifecycle.BukkitLifecycleReporter;
 import io.github.kizio806.gearprogress.platform.bukkit.placeholder.GearProgressPlaceholderExpansion;
@@ -128,6 +129,7 @@ public final class PaperBootstrap implements BukkitBootstrapLifecycle {
     pm.registerEvents(
         new EnchantmentRestrictionListener(application.restrictionQueryService(), feedback),
         plugin);
+    pm.registerEvents(new ProgressionGuiListener(), plugin);
   }
 
   private void registerCommands() {
