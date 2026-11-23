@@ -5,6 +5,7 @@ description: Equipment progression management plugin for Paper, Purpur and Folia
 authors:
   - kizio806
 website: https://github.com/kizio806/GearProgress
+icon: icon.png
 api-version: '1.21'
 folia-supported: true
 softdepend:
