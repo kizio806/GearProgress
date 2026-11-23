@@ -1,0 +1,30 @@
+paper:
+  - changed-files:
+      - any-glob-to-any-file: 'distributions/paper/**'
+
+spigot:
+  - changed-files:
+      - any-glob-to-any-file: 'distributions/spigot/**'
+
+core:
+  - changed-files:
+      - any-glob-to-any-file: 'core/**'
+
+documentation:
+  - changed-files:
+      - any-glob-to-any-file:
+          - 'docs/**'
+          - '*.md'
+
+ci:
+  - changed-files:
+      - any-glob-to-any-file:
+          - '.github/**'
+
+dependencies:
+  - changed-files:
+      - any-glob-to-any-file:
+          - 'gradle/**'
+          - 'build.gradle.kts'
+          - 'settings.gradle.kts'
+          - 'gradle.properties'
