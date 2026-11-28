@@ -8,7 +8,7 @@ Thank you for your interest in contributing to **GearProgress**! This guide outl
 
 GearProgress is an enterprise-grade progressive equipment unlocking engine for Minecraft servers. The codebase enforces strict hexagonal architecture (Ports and Adapters):
 
-1. **`:gearprogress-core` (Pure Java 21 Domain):**
+1. **`:gearprogress-core` (Pure Java 25 Domain):**
    - Contains immutable models: `EquipmentCategory`, `EquipmentTier`, `TierKey`, `UnlockCondition`, `RestrictionPolicy`, `EnchantmentPolicy`, and `TierProgressState`.
    - Pure mathematical duration engine: `RelativeDurationParser`.
    - **Strict Invariant:** Must remain 100% platform-neutral and Minecraft-free. Never import `org.bukkit.*`, `io.papermc.*`, `net.minecraft.*`, or `org.spongepowered.*`. This is permanently verified by `./gradlew verifyPlatformBoundaries`.
@@ -30,7 +30,7 @@ GearProgress is an enterprise-grade progressive equipment unlocking engine for M
    - Every release compiles **exactly two distribution JARs**:
      - `gearprogress-<base>-<range>-paper-purpur-folia.jar`
      - `gearprogress-<base>-<range>-spigot-bukkit.jar`
-   - Governed by strict Semantic Versioning (`MAJOR.MINOR.PATCH+mc<RANGE>`, e.g. `1.0.0+mc1.21.x`).
+   - Governed by strict Semantic Versioning (`MAJOR.MINOR.PATCH+mc<RANGE>`, e.g. `1.1.0+mc26.x`).
 
 ---
 
@@ -40,8 +40,8 @@ Development occurs on `main` and dedicated support branches covering supported M
 
 | Branch | Minecraft Line | Supported Server Platforms | Java Baseline | Status |
 |---|---|---|---|---|
-| **`main`** | 1.21.x | Paper, Purpur, Folia, Spigot, CraftBukkit 1.21–1.21.11 | **Java 21** | Active Development |
-| **`support/1.21.x`** | 1.21.x | Paper, Purpur, Folia, Spigot, CraftBukkit 1.21–1.21.11 | **Java 21** | Long-Term Support |
+| **`main`** | 26.x | Paper, Purpur, Folia, Spigot, CraftBukkit 26.1.x–26.3 | **Java 25** | Active Development |
+| **`support/mc-1.21.x`** | 1.21.x | Paper, Purpur, Folia, Spigot, CraftBukkit 1.21–1.21.11 | **Java 21** | Long-Term Support |
 
 ---
 
@@ -49,7 +49,7 @@ Development occurs on `main` and dedicated support branches covering supported M
 
 ### 1. Prerequisites
 - **Git**
-- **JDK 21** or higher (e.g. Eclipse Temurin)
+- **JDK 25** or higher (e.g. Eclipse Temurin)
 - **Bash** shell (for verification and release scripts)
 
 ### 2. Clone the Repository
@@ -80,7 +80,7 @@ Every pull request must pass the automated source hygiene checks (`./gradlew val
 - **Zero Suppression Annotations:** `@SuppressWarnings` is strictly forbidden across all modules. Resolve deprecations, warnings, and type mismatches at the source.
 - **Zero Wildcard Imports:** `import java.util.*;` is prohibited. Use explicit single-class imports.
 - **Zero Task Markers:** No `TODO`, `FIXME`, or `XXX` tags in committed Java code.
-- **Compiler Flags:** Compiles under Java 21 with `-Xlint:all` and `-Werror`. Do not introduce compiler warnings.
+- **Compiler Flags:** Compiles under Java 25 with `-Xlint:all` and `-Werror`. Do not introduce compiler warnings.
 - **Meaningful Tests:** Never write tests solely to boost line coverage. Every test must validate real behavior, observable contracts, boundary values, error handling, or regressions.
 
 ---

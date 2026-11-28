@@ -40,5 +40,5 @@ Active bugfixes and patch releases are supported across our multi-version branch
 
 | Minecraft Line | Supported Minecraft Versions | Server Platforms | Git Branch | Java Baseline |
 |---|---|---|---|---|
-| **Minecraft 1.21.x** | 1.21, 1.21.1, 1.21.2, 1.21.3, 1.21.4, 1.21.11 | Paper, Purpur, Folia, Spigot, CraftBukkit | [`main`](https://github.com/kizio806/GearProgress) | Java 21 |
-| **Minecraft 1.21.x (LTS)** | 1.21, 1.21.1, 1.21.2, 1.21.3, 1.21.4, 1.21.11 | Paper, Purpur, Folia, Spigot, CraftBukkit | [`support/1.21.x`](https://github.com/kizio806/GearProgress/tree/support/1.21.x) | Java 21 |
+| **Minecraft 26.x** | 26.1, 26.1.1, 26.1.2, 26.2, 26.3 | Paper, Purpur, Folia, Spigot, CraftBukkit | [`main`](https://github.com/kizio806/GearProgress) | Java 25 |
+| **Minecraft 1.21.x (LTS)** | 1.21–1.21.11 | Paper, Purpur, Folia, Spigot, CraftBukkit | [`support/mc-1.21.x`](https://github.com/kizio806/GearProgress/tree/support/mc-1.21.x) | Java 21 |

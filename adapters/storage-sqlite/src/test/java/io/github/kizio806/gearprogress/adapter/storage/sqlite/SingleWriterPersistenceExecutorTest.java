@@ -136,7 +136,7 @@ class SingleWriterPersistenceExecutorTest {
                 try {
                   start.await();
                   for (int i = 0; i < submissionsPerThread; i++) {
-                    var unused = executor.run(processed::incrementAndGet);
+                    var _ = executor.run(processed::incrementAndGet);
                   }
                 } catch (InterruptedException e) {
                   Thread.currentThread().interrupt();

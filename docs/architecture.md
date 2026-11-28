@@ -29,12 +29,12 @@ flowchart TD
         PlatBukkit[":platforms:bukkit"]
     end
 
-    subgraph ApplicationLayer ["Application Layer (Java 21)"]
+    subgraph ApplicationLayer ["Application Layer (Java 25)"]
         App[":gearprogress-application"]
         Ports["SPI Ports: ProgressionRepository, TaskSchedulerPort, EventPublisherPort"]
     end
 
-    subgraph CoreDomain ["Core Domain (Pure Java 21)"]
+    subgraph CoreDomain ["Core Domain (Pure Java 25)"]
         Core[":gearprogress-core"]
     end
 
@@ -63,7 +63,7 @@ flowchart TD
 
 ## 📦 Module Responsibilities
 
-### 1. `gearprogress-core` (Pure Java 21 Domain)
+### 1. `gearprogress-core` (Pure Java 25 Domain)
 - **Role:** Pure domain entity definitions, value objects, mathematical calculations, and invariant validation.
 - **Key Types:**
   - `EquipmentCategory`: Enum classifying gear slots (`ARMOR`, `TOOLS`, `WEAPONS`, `SHIELD`, `ELYTRA`).
@@ -74,7 +74,7 @@ flowchart TD
   - `EnchantmentPolicy`: Governs whether enchantments are permitted prior to full tier unlocking.
   - `TierProgressState`: Runtime state of a tier (`LOCKED`, `UNLOCKED`, `PAUSED`).
   - `RelativeDurationParser`: Deterministic string duration parser (`14d`, `2w`, `3h30m`, `45s`).
-- **Dependencies:** Standard Java 21 runtime only. Zero external dependencies.
+- **Dependencies:** Standard Java 25 runtime only. Zero external dependencies.
 
 ### 2. `gearprogress-application` (Orchestration & Use Cases)
 - **Role:** Business logic orchestration, timer polling, configuration parsing, YAML compilers, and SPI ports.

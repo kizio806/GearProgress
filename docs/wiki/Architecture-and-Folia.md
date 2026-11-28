@@ -6,7 +6,7 @@ GearProgress is built from the ground up using **Hexagonal Architecture** (Ports
 
 ## Modularity & Ports
 
-1. **`gearprogress-core` (Pure Java 21 Domain)**:
+1. **`gearprogress-core` (Pure Java 25 Domain)**:
    - Contains immutable models: `EquipmentCategory`, `EquipmentTier`, `TierKey`, `UnlockCondition`, `RestrictionPolicy`.
    - Pure mathematical duration engine: `RelativeDurationParser`.
    - Has zero dependencies on Bukkit, Paper, or Minecraft.

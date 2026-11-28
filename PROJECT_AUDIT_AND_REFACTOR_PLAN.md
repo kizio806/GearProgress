@@ -12,7 +12,7 @@
 
 ## 1. Krótki opis repozytorium i jego celu
 
-`GearProgress` to nowoczesny, zaawansowany plugin serwerowy dla środowisk **Paper / Purpur / Folia** oraz **Spigot / CraftBukkit** (wersja docelowa: **Minecraft 1.21.x / Java 21+**), zaprojektowany w oparciu o czystą architekturę heksagonalną (Ports and Adapters).
+`GearProgress` to nowoczesny plugin serwerowy dla środowisk **Paper / Purpur / Folia** oraz **Spigot / CraftBukkit** (aktywna linia: **Minecraft 26.1.2–26.3 / Java 25**), zaprojektowany w oparciu o czystą architekturę heksagonalną (Ports and Adapters).
 
 Głównym celem projektu jest zarządzanie progresywnym odblokowywaniem ekwipunku na serwerach typu SMP (*Survival Multiplayer*). Plugin pozwala administratorom serwera na precyzyjne sterowanie dostępem do pancerzy (skórzanych, kolczych, żelaznych, diamentowych, netherytowych), narzędzi, broni, tarcz oraz elytry za pomocą:
 - **Różnorodnych metod odblokowania:** `always`, `never`, liczników względnych (`timer`, np. `after: 7d`), znaczników czasowych kalendarza (`date`, ISO-8601) oraz poleceń administratorskich (`command`),

@@ -46,7 +46,7 @@ flowchart TD
 ```
 
 ## Module Isolation Invariants
-1. `gearprogress-core`: Zero external dependencies, pure Java 21, no server APIs.
+1. `gearprogress-core`: Zero external dependencies, pure Java 25, no server APIs.
 2. `gearprogress-application`: Depends only on `core`, defines SPI ports, zero server APIs.
 3. `adapters:storage-sqlite`: Implements `ProgressionRepository` using SQLite JDBC and WAL mode.
 4. `platforms:bukkit`: Shared Minecraft logic depending on Bukkit API and Adventure.

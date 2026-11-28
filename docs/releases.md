@@ -14,9 +14,9 @@ GearProgress follows an engineering-grade versioning policy based on [Semantic V
 MAJOR.MINOR.PATCH+mc<MINECRAFT_RANGE>
 ```
 
-Example for active `main` branch:
+Example for the active `main` branch:
 ```text
-1.0.0+mc1.21.x
+1.1.0+mc26.x
 ```
 
 ### Increment Semantics
@@ -35,8 +35,8 @@ The defining principle of this versioning architecture is **global base version 
 
 > **Every active support branch must use the exact same base project version.**
 
-When future support branches are created alongside `main` (`1.0.0+mc1.21.x`):
-- All active compatibility lines must share the identical base version (`1.0.0`).
+The active compatibility branches are maintained as follows:
+- All active compatibility lines must share the identical base version (`1.1.0`).
 - Base versions are never incremented independently on a single branch.
 - Version upgrades are applied across all active support branches in lockstep.
 
@@ -48,14 +48,14 @@ Every official release produces **EXACTLY TWO production distribution JARs** bui
 
 1. **Paper Family JAR**:
    `gearprogress-<BASE_VERSION>-<MINECRAFT_RANGE>-paper-purpur-folia.jar`
-   - Example: `gearprogress-1.0.0-mc1.21.x-paper-purpur-folia.jar`
-   - Platform Compatibility: **Paper**, **Purpur**, and **Folia** (Minecraft 1.21–1.21.11).
+   - Example: `gearprogress-1.1.0-mc26.x-paper-purpur-folia.jar`
+   - Platform Compatibility: **Paper**, **Purpur**, and **Folia** (Minecraft 26.1.x, 26.2, and 26.3).
    - Features: Native Adventure MiniMessage, asynchronous event routing, Folia region scheduling via `RegionTaskScheduler`, and Brigadier commands.
 
 2. **Spigot Family JAR**:
    `gearprogress-<BASE_VERSION>-<MINECRAFT_RANGE>-spigot-bukkit.jar`
-   - Example: `gearprogress-1.0.0-mc1.21.x-spigot-bukkit.jar`
-   - Platform Compatibility: **Spigot** and **CraftBukkit** (Minecraft 1.21–1.21.11).
+   - Example: `gearprogress-1.1.0-mc26.x-spigot-bukkit.jar`
+   - Platform Compatibility: **Spigot** and **CraftBukkit** (Minecraft 26.1.x, 26.2, and 26.3).
    - Features: Dedicated Spigot task scheduling, Spigot PDC persistence keys, and relocated Kyori Adventure components.
 
 Never bundle both server platforms into a single monolithic JAR, and never produce separate fragmented JARs for Folia or Purpur.
@@ -70,13 +70,13 @@ Every official release deploys with **EXACTLY TWO distribution version entries**
 1. **Paper, Purpur, and Folia**:
    - Version ID / Number: `<BASE_VERSION>+mc<MINECRAFT_RANGE>.paper` (e.g. `1.0.0+mc1.21.x.paper`)
    - Supported Loaders: `paper`, `purpur`, `folia`
-   - Supported Game Versions: `1.21` through `1.21.11`
-   - File: `gearprogress-1.0.0-mc1.21.x-paper-purpur-folia.jar`
+   - Supported Game Versions: `26.1`, `26.1.1`, `26.1.2`, `26.2`, and `26.3`
+   - File: `gearprogress-1.1.0-mc26.x-paper-purpur-folia.jar`
 2. **Spigot and CraftBukkit**:
    - Version ID / Number: `<BASE_VERSION>+mc<MINECRAFT_RANGE>.spigot` (e.g. `1.0.0+mc1.21.x.spigot`)
    - Supported Loaders: `spigot`, `bukkit`
-   - Supported Game Versions: `1.21` through `1.21.11`
-   - File: `gearprogress-1.0.0-mc1.21.x-spigot-bukkit.jar`
+   - Supported Game Versions: `26.1`, `26.1.1`, `26.1.2`, `26.2`, and `26.3`
+   - File: `gearprogress-1.1.0-mc26.x-spigot-bukkit.jar`
 
 ---
 

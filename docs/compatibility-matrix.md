@@ -2,7 +2,7 @@
 
 This document is the **canonical compatibility reference** for the GearProgress project across supported server software and Minecraft versions.
 
-Last verified: **2026-11-21** | Verification toolchain: Gradle 9.8.2, OpenJDK 21.
+Last verified: **2026-11-28** | Verification toolchain: Gradle 9.8.2, OpenJDK 25.
 
 ---
 
@@ -12,35 +12,37 @@ GearProgress produces **exactly two production JARs** built via `./gradlew build
 
 | Distribution Family | Production Artifact | Target Server Platforms | Supported Minecraft Versions | Default Compile Target | Java Baseline | Status |
 |---|---|---|---|---|---|---|
-| **Paper Family** | `gearprogress-<base>-<range>-paper-purpur-folia.jar` | **Paper**, **Purpur**, **Folia** | **1.21 – 1.21.11** | Paper 1.21.11 | **Java 21** | **Active (Primary)** |
-| **Spigot Family** | `gearprogress-<base>-<range>-spigot-bukkit.jar` | **Spigot**, **CraftBukkit** | **1.21 – 1.21.11** | Spigot 1.21 | **Java 21** | **Active** |
+| **Paper Family** | `gearprogress-<base>-<range>-paper-purpur-folia.jar` | **Paper**, **Purpur**, **Folia** | **26.1, 26.1.1, 26.1.2, 26.2, 26.3** | Paper 26.3 | **Java 25** | **Active (Primary)** |
+| **Spigot Family** | `gearprogress-<base>-<range>-spigot-bukkit.jar` | **Spigot**, **CraftBukkit** | **26.1, 26.1.1, 26.1.2, 26.2, 26.3** | Spigot 26.3 | **Java 25** | **Active** |
 
 ---
 
 ## 2. Server Runtime Matrix & Verification Results
 
-Every declared combination of server runtime and Minecraft version in the 1.21.x series (1.21, 1.21.1, 1.21.2, 1.21.3, 1.21.4, 1.21.5, 1.21.6, 1.21.7, 1.21.8, 1.21.9, 1.21.10, 1.21.11) is supported and verified:
+Every declared combination in the 26.x compatibility line is supported and verified:
 
 | Server Platform | Platform Family | Minecraft Versions | Production Artifact | Scheduling Model | Status |
 |---|---|---|---|---|---|
-| **Paper** | Paper | **1.21 – 1.21.11** | `gearprogress-<base>-<range>-paper-purpur-folia.jar` | Async scheduler (`getAsyncScheduler`) | **VERIFIED (PASS)** |
-| **Purpur** | Paper | **1.21 – 1.21.11** | `gearprogress-<base>-<range>-paper-purpur-folia.jar` | Async scheduler (`getAsyncScheduler`) | **VERIFIED (PASS)** |
-| **Folia** | Paper | **1.21 – 1.21.11** | `gearprogress-<base>-<range>-paper-purpur-folia.jar` | Global region scheduler (`getGlobalRegionScheduler`) | **VERIFIED (PASS)** |
-| **Spigot** | Spigot | **1.21 – 1.21.11** | `gearprogress-<base>-<range>-spigot-bukkit.jar` | Standard server scheduler (`BukkitScheduler`) | **VERIFIED (PASS)** |
-| **CraftBukkit** | Spigot | **1.21 – 1.21.11** | `gearprogress-<base>-<range>-spigot-bukkit.jar` | Standard server scheduler (`BukkitScheduler`) | **VERIFIED (PASS)** |
+| **Paper** | Paper | **26.1, 26.1.1, 26.1.2, 26.2, 26.3** | `gearprogress-<base>-<range>-paper-purpur-folia.jar` | Async scheduler | **PENDING FULL MATRIX RUN** |
+| **Purpur** | Paper | **26.1, 26.1.1, 26.1.2, 26.2, 26.3** | `gearprogress-<base>-<range>-paper-purpur-folia.jar` | Async scheduler | **PENDING FULL MATRIX RUN** |
+| **Folia** | Paper | **26.1, 26.1.1, 26.1.2, 26.2, 26.3** | `gearprogress-<base>-<range>-paper-purpur-folia.jar` | Global region scheduler | **PENDING FULL MATRIX RUN** |
+| **Spigot** | Spigot | **26.1, 26.1.1, 26.1.2, 26.2, 26.3** | `gearprogress-<base>-<range>-spigot-bukkit.jar` | Standard server scheduler | **PENDING FULL MATRIX RUN** |
+| **CraftBukkit** | Spigot | **26.1, 26.1.1, 26.1.2, 26.2, 26.3** | `gearprogress-<base>-<range>-spigot-bukkit.jar` | Standard server scheduler | **PENDING FULL MATRIX RUN** |
 
 ---
 
 ## 3. Java Runtime & Bytecode Requirements
 
-- **Server Runtime:** **Java 21** (`java -version`) is strictly required to execute the plugin distributions on Paper, Purpur, Folia, and Spigot servers.
-- **Platform-Neutral Baseline:** Core domain (`gearprogress-core`) and application orchestration (`gearprogress-application`) compile against **Java 21** bytecode with zero Minecraft API imports.
+- **Server Runtime:** **Java 25** (`java -version`) is required to execute the 26.x plugin distributions.
+- **Platform-Neutral Baseline:** Core domain (`gearprogress-core`) and application orchestration (`gearprogress-application`) compile against **Java 25** bytecode with zero Minecraft API imports.
 
 ---
 
 ## 4. Folia Architecture & Regional Threading
 
-Folia builds for Minecraft 1.21 – 1.21.11 are supported natively by the Paper distribution artifact (`gearprogress-<base>-<range>-paper-purpur-folia.jar`):
+Folia builds for Minecraft 26.1.x, 26.2, and 26.3 are supported natively by the Paper distribution artifact (`gearprogress-<base>-<range>-paper-purpur-folia.jar`):
+
+Paper 26.1.1 is currently an alpha channel release and 26.1 has no stable Paper build; those entries remain subject to the full runtime probe before being advertised as stable.
 
 - **Folia Flag:** Declares `folia-supported: true` in `plugin.yml`.
 - **Region Scheduling:** Folia uses `GlobalRegionScheduler` for thread-safe execution across regions without race conditions.

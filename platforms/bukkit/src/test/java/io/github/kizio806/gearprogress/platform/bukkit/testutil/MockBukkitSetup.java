@@ -62,9 +62,9 @@ public final class MockBukkitSetup {
                       case "getConsoleSender" -> consoleSender;
                       case "getLogger" -> Logger.getLogger("MockServer");
                       case "getName" -> "MockServer";
-                      case "getVersion" -> "1.21.11";
-                      case "getMinecraftVersion" -> "1.21.11";
-                      case "getBukkitVersion" -> "1.21.11-R0.1-SNAPSHOT";
+                      case "getVersion" -> "26.3.264";
+                      case "getMinecraftVersion" -> "26.3";
+                      case "getBukkitVersion" -> "26.3-R0.1-SNAPSHOT";
                       case "getOnlinePlayers" -> List.copyOf(ONLINE_PLAYERS.values());
                       case "getWorlds" -> List.copyOf(worlds.values());
                       case "getWorld" ->

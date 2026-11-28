@@ -22,6 +22,7 @@ jacoco {
 
 tasks.withType<Test>().configureEach {
     useJUnitPlatform()
+    jvmArgs("--enable-native-access=ALL-UNNAMED")
     testLogging {
         events("failed", "skipped")
     }

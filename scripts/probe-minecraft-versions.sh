@@ -10,8 +10,8 @@ Usage:
     [--keep-workdir]
 
 Example:
-  ./scripts/probe-minecraft-versions.sh --versions "1.21.4,1.21.11"
-  ./scripts/probe-minecraft-versions.sh --versions "1.21.11" --tasks "verifyCompatibilityMatrix check"
+  ./scripts/probe-minecraft-versions.sh --versions "26.1,26.1.1,26.1.2,26.2,26.3"
+  ./scripts/probe-minecraft-versions.sh --versions "26.3" --tasks "verifyCompatibilityMatrix check"
 USAGE
 }
 
@@ -35,6 +35,18 @@ validate_mc_version() {
   if [[ ! "$version" =~ ^[0-9]+\.[0-9]+(\.[0-9]+)?$ ]]; then
     echo "Invalid Minecraft version '$version'. Expected MAJOR.MINOR or MAJOR.MINOR.PATCH"
     exit 1
+  fi
+}
+
+release_range_for_version() {
+  local version="$1"
+  local major="${version%%.*}"
+  local remainder="${version#*.}"
+  local minor="${remainder%%.*}"
+  if [ "$major" = "1" ]; then
+    echo "${major}.${minor}.x"
+  else
+    echo "${major}.x"
   fi
 }
 
@@ -128,10 +140,11 @@ for version in "${VERSIONS[@]}"; do
 
   (
     cd "$CANDIDATE_DIR"
+    RELEASE_RANGE="$(release_range_for_version "$version")"
     PROPS_FILE="$CANDIDATE_DIR/gradle.properties" "$SET_VERSION_SCRIPT" \
-      --base-version "1.0.0" \
-      --release-range "${version%.*}.x" \
-      --mod-version "1.0.0+mc${version%.*}.x" \
+      --base-version "1.1.0" \
+      --release-range "$RELEASE_RANGE" \
+      --mod-version "1.1.0+mc${RELEASE_RANGE}" \
       --supported-versions "$version"
       
     # Execute gradle verification tasks

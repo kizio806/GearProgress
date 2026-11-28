@@ -6,8 +6,8 @@ This guide provides step-by-step instructions for installing and configuring **G
 
 ## 📋 System Requirements
 
-- **Minecraft Server:** Paper 1.21.x, Purpur 1.21.x, Folia 1.21.x, or Spigot 1.21.x (1.21–1.21.11).
-- **Java Runtime:** **Java 21 (LTS)** minimum (`java -version`).
+- **Minecraft Server:** Paper, Purpur, Folia, or Spigot **26.1.x, 26.2, or 26.3**.
+- **Java Runtime:** **Java 25** minimum (`java -version`).
 - **Permissions Plugin:** LuckPerms or any standard Bukkit permissions manager.
 - *(Optional)* [PlaceholderAPI](https://placeholderapi.com/) for scoreboard, tab list, and menu placeholders.
 
@@ -35,7 +35,7 @@ Download the latest production JAR corresponding to your server platform from [G
 ### 2. Install to Plugins Directory
 Copy the downloaded JAR file into your server's `plugins/` directory:
 ```bash
-cp gearprogress-1.0.0-mc1.21.x-paper-purpur-folia.jar /path/to/server/plugins/
+cp gearprogress-1.1.0-mc26.x-paper-purpur-folia.jar /path/to/server/plugins/
 ```
 
 ### 3. Start the Server

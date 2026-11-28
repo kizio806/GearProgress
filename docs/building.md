@@ -6,7 +6,7 @@ This guide details how to clone, compile, test, and package **GearProgress** fro
 
 ## ☕ Prerequisites
 
-- **Java Development Kit (JDK):** **Java 21 (LTS)** or higher. We recommend [Eclipse Temurin](https://adoptium.net/) or standard OpenJDK distributions.
+- **Java Development Kit (JDK):** **Java 25** or higher. We recommend [Eclipse Temurin](https://adoptium.net/) or standard OpenJDK distributions.
 - **Git:** Required to clone the repository and evaluate commit metadata.
 - **Bash Shell:** Required for verification and automated release scripts.
 - **Internet Access:** Required on initial build to download Gradle wrapper, Minecraft server APIs, and build plugins.

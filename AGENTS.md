@@ -12,7 +12,7 @@ Future AI agents working in this repository must operate as **experienced senior
 - **Question Existing Decisions:** Never assume existing code or structure is correct merely because it is already committed. Always verify what the build system compiles and tests against actual test executions.
 - **Maintain Architectural Purity:** Platform-independent logic belongs exclusively in `core` and `application`, while `:platforms:bukkit`, `:platforms:paper`, and `:platforms:spigot` provide runtime integrations.
 - **Prefer Maintainable & Simple Solutions:** Do not introduce global singletons, service locators, NMS, reflection hacks, or giant manager classes when clean, testable hexagonal architectures suffice.
-- **Explain Trade-offs Explicitly:** When proposing changes, outline the pros, cons, and performance implications (e.g. pure Java in `core` and `application` targeting Java 21 baseline, with platform adapters targeting Java 21 on Paper and Spigot).
+- **Explain Trade-offs Explicitly:** When proposing changes, outline the pros, cons, and performance implications (e.g. pure Java in `core` and `application` targeting Java 25 baseline, with platform adapters targeting Java 25 on Paper and Spigot).
 - **Avoid Shortcuts:** Never bypass `./gradlew clean check build`, never disable quality gates, never suppress compiler warnings or SpotBugs checks, and never leave uncommitted scratch files.
 - **Mandatory 100% Green Verification Before Commit & Push:** Never commit changes, push commits, or request PR merges without ensuring 100% green verification. Every quality gate — local unit & integration tests, Checkstyle, SpotBugs, PMD, JaCoCo instruction coverage ($\ge 90\%$ aggregated, $\ge 95\%$ on `core`), release dry-runs, GitHub Actions CI workflows, CodeQL analysis (0 open alerts), and SonarCloud Quality Gate (Rating A, 0 issues) — must pass cleanly without a single failure or warning.
 
@@ -33,8 +33,8 @@ Before touching any code, an AI agent must complete four distinct analysis steps
 
 ### Step 1: Understand the Architecture
 1. **Module Separation:**
-   - `:gearprogress-core`: Pure Java 21 library. Platform-neutral and Minecraft-free. Contains core domain models (`EquipmentCategory`, `EquipmentTier`, `TierKey`, `UnlockCondition`, `RestrictionPolicy`, `EnchantmentPolicy`, `TierProgressState`) and mathematical parsing (`RelativeDurationParser`).
-   - `:gearprogress-application`: Application orchestration and use cases (Java 21). Contains lifecycle management (`ProgressionService`, `TimerService`, `RestrictionQueryService`), YAML compilers (`EquipmentDefinitionCompiler`), configuration loaders (`YamlConfigLoader`), and SPI ports (`ProgressionRepository`, `TaskSchedulerPort`, `EventPublisherPort`, `LifecycleReporterPort`, `TimePort`).
+   - `:gearprogress-core`: Pure Java 25 library. Platform-neutral and Minecraft-free. Contains core domain models (`EquipmentCategory`, `EquipmentTier`, `TierKey`, `UnlockCondition`, `RestrictionPolicy`, `EnchantmentPolicy`, `TierProgressState`) and mathematical parsing (`RelativeDurationParser`).
+   - `:gearprogress-application`: Application orchestration and use cases (Java 25). Contains lifecycle management (`ProgressionService`, `TimerService`, `RestrictionQueryService`), YAML compilers (`EquipmentDefinitionCompiler`), configuration loaders (`YamlConfigLoader`), and SPI ports (`ProgressionRepository`, `TaskSchedulerPort`, `EventPublisherPort`, `LifecycleReporterPort`, `TimePort`).
    - `:adapters:storage-sqlite`: Asynchronous single-writer SQLite persistence implementing application ports with WAL mode.
    - `:platforms:bukkit`: Shared Bukkit adapter layer. Provides event listeners (`CraftRestrictionListener`, `UseRestrictionListener`, `EquipRestrictionListener`, `PickupRestrictionListener`, `InventoryMoveRestrictionListener`, `EnchantmentRestrictionListener`), GUI views (`ProgressionGuiView`), and PlaceholderAPI expansion (`GearProgressPlaceholderExpansion`).
    - `:platforms:paper:common`: Paper-specific adapters. Provides Folia region scheduler integration (`FoliaTaskScheduler`), native Brigadier command trees (`GearProgressMainCommand`), and native Adventure MiniMessage.
@@ -84,7 +84,7 @@ Before touching any code, an AI agent must complete four distinct analysis steps
 - **Golden Packaging Invariant:** Every release builds **EXACTLY TWO production JARs** built via `./gradlew build`:
   1. **EXACTLY ONE Paper JAR** (`gearprogress-<base>-<range>-paper-purpur-folia.jar`)
   2. **EXACTLY ONE Spigot JAR** (`gearprogress-<base>-<range>-spigot-bukkit.jar`)
-- **Versioning Policy:** Strict `MAJOR.MINOR.PATCH+mc<RANGE>` (e.g. `1.0.0+mc1.21.x`). Enforced by `verifySemverVersion`.
+- **Versioning Policy:** Strict `MAJOR.MINOR.PATCH+mc<RANGE>` (e.g. `1.1.0+mc26.x`). Enforced by `verifySemverVersion`.
 
 ---
 

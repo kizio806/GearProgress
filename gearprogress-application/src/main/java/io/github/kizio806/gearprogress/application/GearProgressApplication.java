@@ -161,7 +161,15 @@ public final class GearProgressApplication implements GearProgressApi {
     timerTask =
         taskScheduler.scheduleRepeatingAsync(
             () -> {
-              var unused = timerService.evaluateProgression();
+              var _ =
+                  timerService
+                      .evaluateProgression()
+                      .whenComplete(
+                          (result, exception) -> {
+                            if (exception != null) {
+                              reporter.severe("Timer progression evaluation failed", exception);
+                            }
+                          });
             },
             Duration.ofSeconds(1),
             interval);
