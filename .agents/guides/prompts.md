@@ -28,4 +28,4 @@ Reference task prompts and operational patterns for AI models collaborating on *
 
 ## 🚀 Prompt: Release Packaging Verification
 
-> "Act as the DevOps Engineer. Perform a complete release readiness dry-run using `./scripts/release.sh --dry-run`. Verify that SemVer build metadata is compliant (`1.0.0+mc1.21.x`), that both distribution artifacts (`paper-purpur-folia` and `spigot-bukkit`) are generated, and that SHA256 checksums are verified."
+> "Act as the DevOps Engineer. Perform a complete release readiness dry-run using `./scripts/release.sh --dry-run`. Verify that SemVer build metadata is compliant (`1.1.0+mc26.x`), that both distribution artifacts (`paper-purpur-folia` and `spigot-bukkit`) are generated, and that SHA256 checksums are verified."

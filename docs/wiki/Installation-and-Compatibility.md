@@ -6,7 +6,7 @@ This document provides detailed setup instructions and server platform compatibi
 
 ## 🗺️ Compatibility Matrix
 
-GearProgress supports modern Minecraft servers running version **1.21.x** (1.21, 1.21.1, 1.21.2, 1.21.3, 1.21.4, 1.21.11):
+GearProgress supports modern Minecraft servers running **26.1.x, 26.2, and 26.3**:
 
 | Server Software | Distribution Artifact | Scheduling Integration | Adventure Engine | Status |
 |---|---|---|---|:---:|
@@ -33,7 +33,7 @@ Folia removes the single-threaded server tick loop in favor of independent, conc
 
 1. Download the JAR matching your server software from [GitHub Releases](https://github.com/kizio806/GearProgress/releases).
 2. Place the JAR file into your server's `plugins/` directory.
-3. Ensure your server runtime is running **Java 21 (LTS)** or higher (`java -version`).
+3. Ensure your server runtime is running **Java 25** or higher (`java -version`).
 4. Start your server. GearProgress will extract its default configurations into `plugins/GearProgress/`.
 5. Customize your progression schedule in `equipment.yml` and `timers.yml`.
 6. Run `/gearprogress reload` to apply your changes live.

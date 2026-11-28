@@ -21,7 +21,7 @@ The `.agents/` directory defines specialized operational roles, context indexes,
 - [`architecture.md`](context/architecture.md) — Hexagonal module architecture diagram and port descriptions.
 - [`domain-model.md`](context/domain-model.md) — Entities, value objects, unlock conditions, and restriction policies.
 - [`matrix.md`](context/matrix.md) — Compatibility matrix, platform runtimes, and Golden Packaging Invariant.
-- [`tech-stack.md`](context/tech-stack.md) — Java 21 baseline, Gradle 9.8.2, Adventure, Paper/Spigot APIs.
+- [`tech-stack.md`](context/tech-stack.md) — Java 25 active baseline, Gradle 9.8.2, Adventure, Paper/Spigot APIs.
 
 ### 3. Rules (`.agents/rules/`)
 - [`architecture-and-boundaries.md`](rules/architecture-and-boundaries.md) — Hexagonal isolation and zero server imports in core.

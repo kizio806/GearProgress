@@ -14,7 +14,7 @@ MAJOR.MINOR.PATCH+mc<MINECRAFT_RANGE>
 
 Example for active line:
 ```text
-1.0.0+mc1.21.x
+1.1.0+mc26.x
 ```
 
 ### Version Semantics
@@ -40,14 +40,14 @@ Every release produces **EXACTLY TWO distribution JARs**:
 2. **Spigot/Bukkit**: `gearprogress-<BASE_VERSION>-<MINECRAFT_RANGE>-spigot-bukkit.jar`
 
 Examples:
-- `gearprogress-1.0.0-mc1.21.x-paper-purpur-folia.jar`
-- `gearprogress-1.0.0-mc1.21.x-spigot-bukkit.jar`
+- `gearprogress-1.1.0-mc26.x-paper-purpur-folia.jar`
+- `gearprogress-1.1.0-mc26.x-spigot-bukkit.jar`
 
 ---
 
 ## 4. Git Tags & Release Conventions
-- **Tag Format**: `v<BASE_VERSION>+mc<MINECRAFT_RANGE>` (e.g. `v1.0.0+mc1.21.x`).
-- **Release Title**: `v<BASE_VERSION> — Minecraft <MINECRAFT_RANGE>` (e.g. `v1.0.0 — Minecraft 1.21.x`).
+- **Tag Format**: `v<BASE_VERSION>+mc<MINECRAFT_RANGE>` (e.g. `v1.1.0+mc26.x`).
+- **Release Title**: `v<BASE_VERSION> — Minecraft <MINECRAFT_RANGE>` (e.g. `v1.1.0 — Minecraft 26.x`).
 - **Release Trigger**: Annotated Git tags matching `v*+mc*` or manual `workflow_dispatch`.
 
 ---

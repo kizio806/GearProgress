@@ -6,8 +6,8 @@ This guide details how to install and configure **GearProgress** on modern Minec
 
 ## System Requirements
 
-- **Minecraft Server:** Paper 1.21.x, Purpur 1.21.x, Folia 1.21.x, or Spigot 1.21.x.
-- **Java Runtime:** Java 21 (LTS) minimum (`java -version`).
+- **Minecraft Server:** Paper, Purpur, Folia, or Spigot 26.1.x, 26.2, or 26.3.
+- **Java Runtime:** Java 25 minimum (`java -version`).
 - **Permissions Plugin:** Any standard Bukkit/Vault permissions manager (LuckPerms recommended).
 - *(Optional)* [PlaceholderAPI](https://placeholderapi.com/) for scoreboard, tab, and menu placeholders.
 

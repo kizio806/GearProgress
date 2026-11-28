@@ -6,7 +6,7 @@ authors:
   - kizio806
 website: https://github.com/kizio806/GearProgress
 icon: icon.png
-api-version: '1.21'
+api-version: '26.1'
 softdepend:
   - PlaceholderAPI
 

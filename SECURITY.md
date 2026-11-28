@@ -6,8 +6,8 @@ Security fixes and advisories are actively provided across all maintained suppor
 
 | Minecraft Line | Git Branch | Supported Server Platforms | Security Support Status |
 |---|---|---|---|
-| **Minecraft 1.21.x** | `main` | Paper, Purpur, Folia, Spigot, CraftBukkit 1.21–1.21.11 | ✅ Actively supported |
-| **Minecraft 1.21.x** | `support/1.21.x` | Paper, Purpur, Folia, Spigot, CraftBukkit 1.21–1.21.11 | ✅ Actively supported |
+| **Minecraft 26.x** | `main` | Paper, Purpur, Folia, Spigot, CraftBukkit 26.1.x–26.3 | ✅ Actively supported |
+| **Minecraft 1.21.x** | `support/mc-1.21.x` | Paper, Purpur, Folia, Spigot, CraftBukkit 1.21–1.21.11 | ✅ Security support |
 
 ---
 
@@ -21,9 +21,9 @@ Please report privately via GitHub Security Advisories or direct maintainer cont
 - **Maintainer Contact:** `kizio.contact@gmail.com`
 
 When reporting, please include:
-- Affected plugin version (e.g. `1.0.0+mc1.21.x`)
+- Affected plugin version (e.g. `1.1.0+mc26.x`)
 - Distribution JAR used (`paper-purpur-folia` or `spigot-bukkit`)
-- Server software and exact build (e.g. `Paper 1.21.4 build 120`, `Folia 1.21.4 build 28`)
+- Server software and exact build (e.g. `Paper 26.3 build 264`, `Folia 26.2 build 135`)
 - Detailed step-by-step reproduction instructions
 - Expected vs actual behavior
 - Impact assessment (e.g. item duplication, restriction bypass, denial of service, memory leak)

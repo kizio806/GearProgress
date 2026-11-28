@@ -7,7 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-No unreleased changes.
+- Ported the active `main` line to Minecraft 26.1.x, 26.2, and 26.3.
+- Raised the active runtime and compilation baseline to Java 25.
+- Preserved the 1.21.x line on `support/mc-1.21.x`.
+- Updated release metadata, CI matrices, documentation, and compatibility validation.
 
 ## [1.0.0+mc1.21.x] - 2026-11-28
 

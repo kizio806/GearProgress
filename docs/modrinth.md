@@ -11,7 +11,7 @@ This document contains the official description markdown and release metadata fo
 ```markdown
 # ⚔️ GearProgress
 
-**GearProgress** is an enterprise-grade progressive equipment gating engine for modern Minecraft servers. Built for **Paper**, **Purpur**, **Folia**, and **Spigot** servers running Minecraft **1.21.x**!
+**GearProgress** is a progressive equipment gating engine for modern Minecraft servers. Built for **Paper**, **Purpur**, **Folia**, and **Spigot** servers running Minecraft **26.1.x, 26.2, and 26.3**!
 
 Pace your SMP season, RPG progression, or competitive server by unlocking armor, weapons, tools, shields, and elytra automatically over time or via admin commands.
 
@@ -34,8 +34,8 @@ Pace your SMP season, RPG progression, or competitive server by unlocking armor,
 
 | Distribution File | Server Software | Minecraft Version |
 |---|---|:---:|
-| `gearprogress-<version>-paper-purpur-folia.jar` | **Paper**, **Purpur**, **Folia** | **1.21.x** |
-| `gearprogress-<version>-spigot-bukkit.jar` | **Spigot**, **CraftBukkit** | **1.21.x** |
+| `gearprogress-<version>-paper-purpur-folia.jar` | **Paper**, **Purpur**, **Folia** | **26.1.x, 26.2, 26.3** |
+| `gearprogress-<version>-spigot-bukkit.jar` | **Spigot**, **CraftBukkit** | **26.1.x, 26.2, 26.3** |
 
-> Install **only one** matching JAR in your server's `plugins/` folder! Requires **Java 21**.
+> Install **only one** matching JAR in your server's `plugins/` folder! Requires **Java 25**.
 ```

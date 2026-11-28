@@ -5,13 +5,13 @@
 [![Codecov Coverage](https://codecov.io/gh/kizio806/GearProgress/graph/badge.svg)](https://codecov.io/gh/kizio806/GearProgress)
 [![GitHub Release](https://img.shields.io/github/v/release/kizio806/GearProgress?sort=semver&logo=github)](https://github.com/kizio806/GearProgress/releases)
 [![License: MPL 2.0](https://img.shields.io/badge/License-MPL_2.0-blue.svg)](LICENSE)
-[![Java: 21](https://img.shields.io/badge/Java-21-orange.svg)](https://adoptium.net)
-[![Platform: Paper](https://img.shields.io/badge/Platform-Paper%201.21.x-blue?logo=paper)](https://papermc.io/)
-[![Platform: Purpur](https://img.shields.io/badge/Platform-Purpur%201.21.x-purple)](https://purpurmc.org/)
-[![Platform: Folia](https://img.shields.io/badge/Platform-Folia%201.21.x-cyan)](https://papermc.io/software/folia)
-[![Platform: Spigot](https://img.shields.io/badge/Platform-Spigot%201.21.x-orange)](https://www.spigotmc.org/)
+[![Java: 25](https://img.shields.io/badge/Java-25-orange.svg)](https://adoptium.net)
+[![Platform: Paper](https://img.shields.io/badge/Platform-Paper%2026.x-blue?logo=paper)](https://papermc.io/)
+[![Platform: Purpur](https://img.shields.io/badge/Platform-Purpur%2026.x-purple)](https://purpurmc.org/)
+[![Platform: Folia](https://img.shields.io/badge/Platform-Folia%2026.x-cyan)](https://papermc.io/software/folia)
+[![Platform: Spigot](https://img.shields.io/badge/Platform-Spigot%2026.x-orange)](https://www.spigotmc.org/)
 
-**GearProgress** is a high-performance, enterprise-grade progressive equipment unlocking engine for modern Minecraft servers. Engineered from the ground up for modern **Paper**, **Purpur**, **Folia**, and **Spigot** networks running Minecraft **1.21.x**, GearProgress empowers server administrators to pace SMP seasons, RPG progression, and competitive gameplay by gating armor, tools, weapons, shields, and elytra behind configurable timers, dates, advancements, or manual administrator commands.
+**GearProgress** is a high-performance progressive equipment unlocking engine for modern Minecraft servers. It supports **Paper**, **Purpur**, **Folia**, and **Spigot** networks running Minecraft **26.1.x through 26.3**, allowing administrators to pace SMP seasons, RPG progression, and competitive gameplay by gating armor, tools, weapons, shields, and elytra behind configurable timers, dates, or administrator commands.
 
 ---
 
@@ -81,7 +81,7 @@ flowchart TD
     Adapters -. implements .-> Ports
 ```
 
-- **`gearprogress-core`:** Pure Java 21 domain entities, calculation models, and invariant rules. Zero dependencies on Bukkit, Paper, Spigot, or NMS.
+- **`gearprogress-core`:** Pure Java 25 domain entities, calculation models, and invariant rules. Zero dependencies on Bukkit, Paper, Spigot, or NMS.
 - **`gearprogress-application`:** Use cases, configuration parsers, YAML compiler, validation diagnostics, and SPI port definitions.
 - **`adapters:storage-sqlite`:** Asynchronous single-writer SQLite persistence implementing application ports.
 - **`platforms/`:** Platform adapters bridging Paper and Spigot server runtimes with the domain layer.
@@ -93,12 +93,12 @@ Dependency flow is strictly unidirectional: `platform -> application -> core`.
 
 ## 📦 Supported Platforms & Distributions
 
-GearProgress targets **Java 21 (LTS)** for server execution, governed by our synchronized [Release Management & Versioning Policy](docs/releases.md). We produce two distinct distribution artifacts per release:
+GearProgress targets **Java 25** for server execution, governed by our synchronized [Release Management & Versioning Policy](docs/releases.md). We produce two distinct distribution artifacts per release:
 
 | Distribution JAR | Target Server Families | Minecraft Compatibility | Notes |
 | :--- | :--- | :---: | :--- |
-| **`gearprogress-<base>-<range>-paper-purpur-folia.jar`** | **Paper**, **Purpur**, **Folia** | **1.21 – 1.21.11** (`mc1.21.x`) | Native Brigadier command trees, Folia regional scheduling via `RegionTaskScheduler`, native Adventure MiniMessage, and async chunk loading. |
-| **`gearprogress-<base>-<range>-spigot-bukkit.jar`** | **Spigot**, **CraftBukkit** | **1.21 – 1.21.11** (`mc1.21.x`) | Dedicated BukkitScheduler tasks, classic Bukkit command routing, tab completion, and relocated Adventure BukkitAudiences. |
+| **`gearprogress-<base>-<range>-paper-purpur-folia.jar`** | **Paper**, **Purpur**, **Folia** | **26.1.x – 26.3** (`mc26.x`) | Native Brigadier command trees, Folia regional scheduling, and native Adventure MiniMessage. |
+| **`gearprogress-<base>-<range>-spigot-bukkit.jar`** | **Spigot**, **CraftBukkit** | **26.1.x – 26.3** (`mc26.x`) | Dedicated BukkitScheduler tasks, classic Bukkit command routing, tab completion, and relocated Adventure BukkitAudiences. |
 
 > [!IMPORTANT]
 > Install **exactly one** matching JAR in your server's `plugins/` directory.
@@ -108,8 +108,8 @@ GearProgress targets **Java 21 (LTS)** for server execution, governed by our syn
 ## 📥 Installation & Quick Start
 
 ### 1. Prerequisites
-- Minecraft server running **Paper 1.21.x**, **Purpur 1.21.x**, **Folia 1.21.x**, or **Spigot 1.21.x**.
-- **Java 21 runtime** or higher (`java -version`).
+- Minecraft server running **Paper/Purpur/Folia or Spigot 26.1.x, 26.2, or 26.3**.
+- **Java 25 runtime** or higher (`java -version`).
 - *(Optional)* [PlaceholderAPI](https://placeholderapi.com/) for scoreboard and tab list integration.
 
 ### 2. First Installation

@@ -113,7 +113,7 @@ val verifyPluginArtifact =
                 pluginDescriptor.contains(
                     "main: io.github.kizio806.gearprogress.platform.paper.GearProgressPlugin",
                 ) &&
-                    pluginDescriptor.contains("api-version: '1.21'") &&
+                    pluginDescriptor.contains("api-version: '26.1'") &&
                     pluginDescriptor.contains("folia-supported: true")
 
             if (missing.isNotEmpty() || forbidden.isNotEmpty() || !descriptorValid) {

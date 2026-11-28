@@ -11,8 +11,8 @@ body:
     id: server_version
     attributes:
       label: Server Software & Version
-      description: What server software and exact version/build are you using? (e.g. Paper 1.21.4 build 120, Folia 1.21.3, Purpur, Spigot)
-      placeholder: "e.g., Paper git-Paper-120 (MC: 1.21.4)"
+      description: What server software and exact version/build are you using? (e.g. Paper 26.3 build 264, Folia 26.2, Purpur, Spigot)
+      placeholder: "e.g., Paper build 264 (MC: 26.3)"
     validations:
       required: true
   - type: input
@@ -20,7 +20,7 @@ body:
     attributes:
       label: GearProgress Version & Distribution
       description: What version and distribution JAR of GearProgress are you running?
-      placeholder: "e.g., 1.0.0+mc1.21.x (gearprogress-1.0.0-mc1.21.x-paper-purpur-folia.jar)"
+      placeholder: "e.g., 1.1.0+mc26.x (gearprogress-1.1.0-mc26.x-paper-purpur-folia.jar)"
     validations:
       required: true
   - type: textarea

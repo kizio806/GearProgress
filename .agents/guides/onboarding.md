@@ -15,7 +15,7 @@ GearProgress is structured around three foundational pillars:
 
 ## ⚡ First-Time Setup Checklist
 
-1. **Verify JDK Version:** Ensure Java 21 is active:
+1. **Verify JDK Version:** Ensure Java 25 is active:
    ```bash
    java -version
    ```
