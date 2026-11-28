@@ -6,10 +6,13 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import io.github.kizio806.gearprogress.application.port.EventPublisherPort;
 import io.github.kizio806.gearprogress.application.port.LifecycleReporterPort;
+import io.github.kizio806.gearprogress.application.port.ProgressionRepository;
 import io.github.kizio806.gearprogress.application.port.TaskSchedulerPort;
 import io.github.kizio806.gearprogress.application.port.TimePort;
 import io.github.kizio806.gearprogress.application.repository.InMemoryProgressionRepository;
 import io.github.kizio806.gearprogress.core.model.category.EquipmentCategory;
+import io.github.kizio806.gearprogress.core.model.state.ProgressionSnapshot;
+import io.github.kizio806.gearprogress.core.model.state.TierProgressState;
 import io.github.kizio806.gearprogress.core.model.tier.TierKey;
 import io.github.kizio806.gearprogress.core.model.unlock.UnlockMethod;
 import java.io.IOException;
@@ -17,6 +20,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -137,6 +143,112 @@ class GearProgressApplicationTest {
     assertNotNull(app.eventPublisher());
 
     app.reload();
+    app.shutdown();
+  }
+
+  @Test
+  void reportsScheduledEvaluationFailure(@TempDir Path tempDir) throws IOException {
+    Files.writeString(
+        tempDir.resolve("config.yml"),
+        """
+        locale: "en-US"
+        timer-check-interval-ticks: 20
+        """);
+    Files.writeString(
+        tempDir.resolve("equipment.yml"),
+        """
+        armor:
+          diamond:
+            unlock-method:
+              type: timer
+              after: 1s
+            allow-enchantments: false
+        """);
+    Files.writeString(
+        tempDir.resolve("timers.yml"),
+        """
+        server-start-epoch: "2026-11-20T11:59:00Z"
+        """);
+
+    AtomicBoolean failWrites = new AtomicBoolean();
+    ProgressionRepository repository =
+        new ProgressionRepository() {
+          @Override
+          public CompletableFuture<ProgressionSnapshot> loadSnapshot() {
+            return CompletableFuture.completedFuture(ProgressionSnapshot.of(Map.of()));
+          }
+
+          @Override
+          public CompletableFuture<Void> saveTierState(TierProgressState state) {
+            return failWrites.get()
+                ? CompletableFuture.failedFuture(new IllegalStateException("write failed"))
+                : CompletableFuture.completedFuture(null);
+          }
+
+          @Override
+          public CompletableFuture<Void> saveAll(ProgressionSnapshot snapshot) {
+            return CompletableFuture.completedFuture(null);
+          }
+
+          @Override
+          public void close() {}
+        };
+
+    AtomicReference<Throwable> reportedFailure = new AtomicReference<>();
+    LifecycleReporterPort reporter =
+        new LifecycleReporterPort() {
+          @Override
+          public void info(String message) {}
+
+          @Override
+          public void warning(String message) {}
+
+          @Override
+          public void severe(String message, Throwable throwable) {
+            reportedFailure.set(throwable);
+          }
+        };
+    AtomicReference<Runnable> scheduledTask = new AtomicReference<>();
+    TaskSchedulerPort scheduler =
+        new TaskSchedulerPort() {
+          @Override
+          public void runAsync(Runnable task) {
+            task.run();
+          }
+
+          @Override
+          public CancellableTask scheduleRepeatingAsync(
+              Runnable task, Duration initialDelay, Duration period) {
+            scheduledTask.set(task);
+            return () -> {};
+          }
+        };
+
+    EventPublisherPort publisher =
+        new EventPublisherPort() {
+          @Override
+          public void publishUnlock(TierKey key, UnlockMethod method, String source) {}
+
+          @Override
+          public void publishLock(TierKey key, String source) {}
+
+          @Override
+          public void publishEnchantmentAllowed(TierKey key, boolean allow, String source) {}
+        };
+    GearProgressApplication app =
+        new GearProgressApplication(
+            tempDir,
+            repository,
+            scheduler,
+            reporter,
+            publisher,
+            () -> Instant.parse("2026-11-20T12:00:00Z"));
+
+    app.start();
+    failWrites.set(true);
+    scheduledTask.get().run();
+
+    assertNotNull(reportedFailure.get());
     app.shutdown();
   }
 }
