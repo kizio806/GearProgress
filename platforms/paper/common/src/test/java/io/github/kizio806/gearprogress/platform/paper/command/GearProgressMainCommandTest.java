@@ -310,6 +310,8 @@ class GearProgressMainCommandTest {
 
     dispatcher.execute("gearprogress timer add armor diamond invalid_time", source);
     dispatcher.execute("gearprogress timer set armor diamond invalid_time", source);
+
+    assertFalse(messages.isEmpty());
   }
 
   @Test
