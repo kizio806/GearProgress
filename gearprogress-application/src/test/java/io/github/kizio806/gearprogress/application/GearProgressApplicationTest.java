@@ -17,6 +17,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.concurrent.atomic.AtomicReference;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
@@ -44,6 +45,7 @@ class GearProgressApplicationTest {
         """);
 
     InMemoryProgressionRepository repo = new InMemoryProgressionRepository();
+    AtomicReference<Runnable> scheduledTask = new AtomicReference<>();
     TaskSchedulerPort scheduler =
         new TaskSchedulerPort() {
           @Override
@@ -54,6 +56,7 @@ class GearProgressApplicationTest {
           @Override
           public CancellableTask scheduleRepeatingAsync(
               Runnable task, Duration initialDelay, Duration period) {
+            scheduledTask.set(task);
             return () -> {};
           }
         };
@@ -88,6 +91,7 @@ class GearProgressApplicationTest {
         new GearProgressApplication(tempDir, repo, scheduler, reporter, publisher, timePort);
 
     app.start();
+    scheduledTask.get().run();
 
     TierKey iron = TierKey.of(EquipmentCategory.ARMOR, "iron");
     TierKey diamond = TierKey.of(EquipmentCategory.ARMOR, "diamond");
