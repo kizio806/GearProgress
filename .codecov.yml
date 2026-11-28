@@ -1,0 +1,51 @@
+coverage:
+  precision: 2
+  round: down
+  range: "80...100"
+  status:
+    project:
+      default:
+        target: 90%
+        threshold: 1%
+    patch:
+      default:
+        target: 90%
+        threshold: 0%
+
+ignore:
+  - "distributions/**"
+  - "build-logic/**"
+  - "**/build/**"
+  - "**/generated/**"
+  - "**/bootstrap/**"
+  - "**/example/**"
+  - "**/sample/**"
+  - "**/mock/**"
+  - "**/testutil/**"
+  - "**/gradle/wrapper/**"
+  - "**/src/test/**"
+  - "**/src/main/resources/**"
+
+comment:
+  layout: "header, diff, flags, components"
+  behavior: default
+  require_changes: false
+
+component_management:
+  individual_components:
+    - component_id: core
+      name: Core Domain
+      paths:
+        - gearprogress-core/**
+    - component_id: application
+      name: Application Layer
+      paths:
+        - gearprogress-application/**
+    - component_id: adapters
+      name: Adapters
+      paths:
+        - adapters/**
+    - component_id: platforms
+      name: Platform Adapters
+      paths:
+        - platforms/**

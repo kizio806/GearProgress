@@ -1,0 +1,56 @@
+# GearProgress Polska Lokalizacja
+schema-version: 1
+
+general:
+  prefix: "<dark_gray>[<gradient:#ffaa00:#ff5500>GearProgress</gradient>]</dark_gray> "
+  plugin-reloaded: "<green>Konfiguracja oraz stan progresji zostaly pomyslnie przeladowane.</green>"
+  no-permission: "<red>Nie posiadasz uprawnien do wykonania tej komendy.</red>"
+
+blocking:
+  craft: "<red>Wytwarzanie <gold>%tier% %category%</gold> jest obecnie zablokowane!</red>"
+  use: "<red>Uzywanie <gold>%tier% %category%</gold> jest obecnie zablokowane!</red>"
+  equip: "<red>Zakladanie <gold>%tier% %category%</gold> jest obecnie zablokowane!</red>"
+  pickup: "<red>Podnoszenie <gold>%tier% %category%</gold> jest obecnie zablokowane!</red>"
+  inventory-move: "<red>Przenoszenie <gold>%tier% %category%</gold> w ekwipunku jest zablokowane!</red>"
+  enchantment: "<red>Zaklecia nie sa dozwolone na przedmiocie <gold>%tier% %category%</gold>!</red>"
+
+broadcast:
+  tier-unlocked: "<gold><bold>PROGRESJA</bold></gold> <yellow>Kategoria %category%, poziom <gold>%tier%</gold> zostal odblokowany!</yellow>"
+  tier-locked: "<gold><bold>PROGRESJA</bold></gold> <yellow>Kategoria %category%, poziom <gold>%tier%</gold> zostal zablokowany przez administratora.</yellow>"
+  enchantment-unlocked: "<gold><bold>PROGRESJA</bold></gold> <aqua>Zaklecia sa teraz dozwolone na przedmiocie <gold>%tier% %category%</gold>!</aqua>"
+
+command:
+  help:
+    header: "<gold>=== Komendy GearProgress ===</gold>"
+    status: "<yellow>/gp status</yellow> <gray>- Przeglad stanu progresji serwera</gray>"
+    view: "<yellow>/gp view</yellow> <gray>- Otworz interaktywne menu postepu</gray>"
+    info: "<yellow>/gp info [category] [tier]</yellow> <gray>- Szczegolowe informacje o poziomie</gray>"
+    unlock: "<yellow>/gp unlock <category> <tier></yellow> <gray>- Reczne odblokowanie poziomu</gray>"
+    lock: "<yellow>/gp lock <category> <tier></yellow> <gray>- Reczne zablokowanie poziomu</gray>"
+    timer: "<yellow>/gp timer <status|add|set|pause|resume> </yellow> <gray>- Zarzadzanie licznikami progresji</gray>"
+    reset: "<yellow>/gp reset <category|all></yellow> <gray>- Reset stanu progresji do domyslnych</gray>"
+    reload: "<yellow>/gp reload</yellow> <gray>- Przeladowanie plikow konfiguracyjnych</gray>"
+  status:
+    header: "<gold>=== GearProgress Stan Progresji Serwera ===</gold>"
+    entry: " <gray>•</gray> <yellow>%category%</yellow> <gold>%tier%</gold>: %status% <gray>(Zaklecia: %enchants%)</gray>"
+    status-unlocked: "<green>ODBLOKOWANE</green>"
+    status-locked: "<red>ZABLOKOWANE</red>"
+  info:
+    header: "<gold>=== GearProgress Informacje: %category% %tier% ===</gold>"
+    status: "<yellow>Status:</yellow> %status%"
+    unlock-method: "<yellow>Metoda odblokowania:</yellow> <white>%method%</white>"
+    remaining-time: "<yellow>Pozostaly czas:</yellow> <white>%time%</white>"
+    enchantments: "<yellow>Dozwolone zaklecia:</yellow> <white>%allowed%</white>"
+    restrictions: "<yellow>Aktywne blokady:</yellow> <white>%restrictions%</white>"
+  unlock:
+    success: "<green>Pomyslnie odblokowano poziom <gold>%tier%</gold> w kategorii <gold>%category%</gold>.</green>"
+    already-unlocked: "<yellow>Poziom <gold>%tier%</gold> w kategorii <gold>%category%</gold> jest juz odblokowany.</yellow>"
+  lock:
+    success: "<green>Pomyslnie zablokowano poziom <gold>%tier%</gold> w kategorii <gold>%category%</gold>.</green>"
+    already-locked: "<yellow>Poziom <gold>%tier%</gold> w kategorii <gold>%category%</gold> jest juz zablokowany.</yellow>"
+  timer:
+    paused: "<yellow>Licznik dla <gold>%category%:%tier%</gold> zostal wstrzymany.</yellow>"
+    resumed: "<green>Licznik dla <gold>%category%:%tier%</gold> zostal wznowiony.</green>"
+    adjusted: "<green>Licznik dla <gold>%category%:%tier%</gold> zostal zmodyfikowany. Pozostalo: <white>%time%</white>.</green>"
+  reset:
+    success: "<green>Stan progresji zostal zresetowany dla: %target%.</green>"

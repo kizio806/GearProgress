@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 💬 General Discussion
+    url: https://github.com/kizio806/GearProgress/discussions
+    about: Questions, configuration ideas, and general chat about GearProgress.
+  - name: 📖 Wiki Documentation
+    url: https://github.com/kizio806/GearProgress/wiki
+    about: Configuration schemas, permission nodes, placeholders, and guides.

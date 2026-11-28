@@ -1,0 +1,56 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "description": "Renovate configuration managing Gradle dependencies, plugins, version catalog, and Gradle Wrapper for GearProgress. GitHub Actions updates are delegated to Dependabot.",
+  "extends": [
+    "config:recommended"
+  ],
+  "timezone": "Europe/Warsaw",
+  "schedule": [
+    "before 6am on monday"
+  ],
+  "prConcurrentLimit": 5,
+  "labels": [
+    "dependencies",
+    "gradle"
+  ],
+  "enabledManagers": [
+    "gradle",
+    "gradle-wrapper",
+    "version-catalog"
+  ],
+  "packageRules": [
+    {
+      "description": "Require manual dashboard approval for major dependency upgrades",
+      "matchUpdateTypes": [
+        "major"
+      ],
+      "labels": [
+        "dependencies",
+        "gradle",
+        "major-upgrade"
+      ],
+      "dependencyDashboardApproval": true
+    },
+    {
+      "description": "Do not automerge Minecraft platform and server APIs",
+      "matchPackageNames": [
+        "io.papermc.paper:paper-api"
+      ],
+      "automerge": false
+    },
+    {
+      "description": "Group testing library patch and minor updates",
+      "matchPackageNames": [
+        "org.junit.jupiter:*",
+        "org.junit.platform:*",
+        "com.tngtech.archunit:*",
+        "org.mockito:*"
+      ],
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ],
+      "groupName": "test dependencies"
+    }
+  ]
+}

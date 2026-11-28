@@ -1,0 +1,35 @@
+name: GearProgress
+version: '${version}'
+main: io.github.kizio806.gearprogress.platform.spigot.GearProgressSpigotPlugin
+description: Equipment progression management plugin for Spigot and CraftBukkit servers.
+authors:
+  - kizio806
+website: https://github.com/kizio806/GearProgress
+icon: icon.png
+api-version: '1.21'
+softdepend:
+  - PlaceholderAPI
+
+commands:
+  gearprogress:
+    description: GearProgress equipment progression management
+    usage: /gearprogress help
+    aliases: [gp, gear]
+
+permissions:
+  gearprogress.admin:
+    description: Full administrative access to GearProgress
+    default: op
+    children:
+      gearprogress.reload: true
+      gearprogress.bypass: true
+      gearprogress.use: true
+  gearprogress.reload:
+    description: Permission to reload GearProgress configuration
+    default: op
+  gearprogress.bypass:
+    description: Bypass all equipment progression restrictions
+    default: op
+  gearprogress.use:
+    description: View equipment progression status and info
+    default: true

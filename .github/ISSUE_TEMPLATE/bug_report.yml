@@ -1,0 +1,55 @@
+name: 🐛 Bug Report
+description: Report unexpected behavior, restriction bypasses, or server errors.
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for reporting an issue in **GearProgress**. Please provide as much context as possible to help us reproduce and fix it quickly.
+  - type: input
+    id: server_version
+    attributes:
+      label: Server Software & Version
+      description: What server software and exact version/build are you using? (e.g. Paper 1.21.4 build 120, Folia 1.21.3, Purpur, Spigot)
+      placeholder: "e.g., Paper git-Paper-120 (MC: 1.21.4)"
+    validations:
+      required: true
+  - type: input
+    id: plugin_version
+    attributes:
+      label: GearProgress Version & Distribution
+      description: What version and distribution JAR of GearProgress are you running?
+      placeholder: "e.g., 1.0.0+mc1.21.x (gearprogress-1.0.0-mc1.21.x-paper-purpur-folia.jar)"
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: Problem Description
+      description: What happened, and what did you expect to happen instead?
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to Reproduce
+      description: How can we reproduce this behavior?
+      placeholder: |
+        1. Set diamond tier to lock for 3d in config.
+        2. Attempt to craft diamond sword.
+        3. Observe...
+    validations:
+      required: true
+  - type: textarea
+    id: configuration
+    attributes:
+      label: Configuration Snippet
+      description: Relevant section of your config YAML files (e.g. `equipment.yml`).
+      render: yaml
+  - type: textarea
+    id: logs
+    attributes:
+      label: Console Logs / Stacktraces
+      description: Paste relevant server logs or error stack traces.
+      render: shell
