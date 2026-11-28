@@ -1,8 +1,10 @@
 ### GearProgress Wiki
 - [Home](Home.md)
-- [Installation](Installation.md)
+- [User Guide](User-Guide.md)
+- [Installation & Compatibility](Installation-and-Compatibility.md)
 - [Configuration Guide](Configuration.md)
 - [Commands & Permissions](Commands-and-Permissions.md)
+- [Progression & Fair Play](Progression-and-Fair-Play.md)
 - [Architecture & Folia](Architecture-and-Folia.md)
 - [Troubleshooting](Troubleshooting.md)
 - [Development & Release](Development-and-Release.md)

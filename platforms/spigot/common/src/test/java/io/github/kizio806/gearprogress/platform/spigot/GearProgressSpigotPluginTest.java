@@ -115,6 +115,9 @@ class GearProgressSpigotPluginTest {
   @DisplayName("onDisable handles exceptions thrown during disable gracefully")
   void testOnDisableHandlesException() throws Exception {
     BukkitAudiences mockAudiences = mock(BukkitAudiences.class);
+    org.mockito.Mockito.doThrow(new RuntimeException("Simulated Adventure close failure"))
+        .when(mockAudiences)
+        .close();
     BukkitBootstrapLifecycle failingBootstrap =
         new BukkitBootstrapLifecycle() {
           @Override

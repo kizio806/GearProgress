@@ -54,7 +54,7 @@ GearProgress uses a dedicated `SingleWriterPersistenceExecutor` running SQLite i
 ## 4. Platform and Compatibility Conflicts
 
 ### Folia Regional Thread Warnings
-- GearProgress provides native Folia scheduling support (`FoliaTaskScheduler`). If you encounter errors relating to asynchronous entity or block access, ensure you are running the `GearProgress-<version>-paper.jar` distribution, which automatically activates Folia handlers when Folia is detected.
+- GearProgress provides native Folia scheduling support (`FoliaTaskScheduler`). If you encounter errors relating to asynchronous entity or block access, ensure you are running the `gearprogress-<base>-<range>-paper-purpur-folia.jar` distribution, which automatically activates Folia handlers when Folia is detected.
 
 ### PlaceholderAPI (`%gearprogress_*%`) returns empty or unparsed placeholders
 - Ensure PlaceholderAPI is installed and enabled.

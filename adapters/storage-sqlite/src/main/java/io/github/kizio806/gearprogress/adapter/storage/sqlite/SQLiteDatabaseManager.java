@@ -9,7 +9,16 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Objects;
 
-/** Manages SQLite database connectivity, WAL pragmas, and schema migrations. */
+/**
+ * Manages SQLite database connectivity, WAL pragmas, and schema migrations.
+ *
+ * <p><b>Database Configuration:</b> Configures Write-Ahead Logging ({@code PRAGMA journal_mode =
+ * WAL}) to allow concurrent lock-free reads while background writes occur, paired with {@code
+ * PRAGMA synchronous = NORMAL} for high write throughput without sacrificing ACID durability.
+ *
+ * <p><b>Threading Guarantees:</b> Connection creation is thread-safe. All write operations must be
+ * serialized through {@link SingleWriterPersistenceExecutor}.
+ */
 public final class SQLiteDatabaseManager {
 
   private final Path databasePath;

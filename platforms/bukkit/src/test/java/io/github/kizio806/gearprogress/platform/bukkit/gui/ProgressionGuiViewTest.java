@@ -59,7 +59,6 @@ class ProgressionGuiViewTest {
 
     Map<TierKey, EquipmentDefinition> definitions = new LinkedHashMap<>();
 
-    // Unlocked armor
     TierKey unlockedKey = TierKey.of(EquipmentCategory.ARMOR, "leather");
     EquipmentDefinition unlockedDef =
         new EquipmentDefinition(
@@ -71,7 +70,6 @@ class ProgressionGuiViewTest {
     when(progressionService.isUnlocked(unlockedKey)).thenReturn(true);
     when(progressionService.isEnchantmentAllowed(unlockedKey)).thenReturn(true);
 
-    // Locked weapon with timer and restrictions
     TierKey lockedKey = TierKey.of(EquipmentCategory.WEAPONS, "diamond");
     EquipmentDefinition lockedDef =
         new EquipmentDefinition(
@@ -85,7 +83,6 @@ class ProgressionGuiViewTest {
     when(timerService.timeRemaining(lockedKey))
         .thenReturn(Optional.of(new TimeRemaining(Duration.ofHours(3), false)));
 
-    // Other categories for material coverage
     TierKey toolKey = TierKey.of(EquipmentCategory.TOOLS, "iron");
     definitions.put(
         toolKey,
@@ -122,25 +119,123 @@ class ProgressionGuiViewTest {
     assertEquals(54, inventory.getSize());
     assertTrue(inventory.getHolder() instanceof ProgressionGuiHolder);
 
-    // Slot 0 should be leather armor (unlocked)
     ItemStack slot0 = inventory.getItem(0);
     assertNotNull(slot0);
     assertEquals(Material.LEATHER_CHESTPLATE, slot0.getType());
 
-    // Slot 1 should be diamond sword (locked)
     ItemStack slot1 = inventory.getItem(1);
     assertNotNull(slot1);
     assertEquals(Material.DIAMOND_SWORD, slot1.getType());
 
-    // Slot 49 should be summary nether star
     ItemStack summary = inventory.getItem(49);
     assertNotNull(summary);
     assertEquals(Material.NETHER_STAR, summary.getType());
 
-    // Decorative panes in bottom row
     ItemStack pane = inventory.getItem(45);
     assertNotNull(pane);
     assertEquals(Material.GRAY_STAINED_GLASS_PANE, pane.getType());
+  }
+
+  @Test
+  void testMaterialResolutionAcrossAllCategoriesAndTiers() {
+    GearProgressApplication application = mock(GearProgressApplication.class);
+    EquipmentRegistry registry = mock(EquipmentRegistry.class);
+    ProgressionService progressionService = mock(ProgressionService.class);
+    TimerService timerService = mock(TimerService.class);
+
+    when(application.equipmentRegistry()).thenReturn(registry);
+    when(application.progressionService()).thenReturn(progressionService);
+    when(application.timerService()).thenReturn(timerService);
+
+    Map<TierKey, EquipmentDefinition> definitions = new LinkedHashMap<>();
+
+    String[] armorTiers = {
+      "leather", "chainmail", "iron", "golden", "diamond", "netherite", "turtle", "unknown"
+    };
+    for (String tier : armorTiers) {
+      TierKey key = TierKey.of(EquipmentCategory.ARMOR, tier);
+      definitions.put(
+          key,
+          new EquipmentDefinition(
+              key,
+              UnlockCondition.always(),
+              RestrictionPolicy.none(),
+              EnchantmentPolicy.allowed()));
+    }
+
+    String[] toolTiers = {"wooden", "stone", "iron", "golden", "diamond", "netherite", "custom"};
+    for (String tier : toolTiers) {
+      TierKey key = TierKey.of(EquipmentCategory.TOOLS, tier);
+      definitions.put(
+          key,
+          new EquipmentDefinition(
+              key,
+              UnlockCondition.always(),
+              RestrictionPolicy.none(),
+              EnchantmentPolicy.allowed()));
+    }
+
+    String[] weaponTiers = {
+      "wooden",
+      "stone",
+      "iron",
+      "golden",
+      "diamond",
+      "netherite",
+      "bow",
+      "crossbow",
+      "trident",
+      "mace",
+      "custom"
+    };
+    for (String tier : weaponTiers) {
+      TierKey key = TierKey.of(EquipmentCategory.WEAPONS, tier);
+      definitions.put(
+          key,
+          new EquipmentDefinition(
+              key,
+              UnlockCondition.always(),
+              RestrictionPolicy.none(),
+              EnchantmentPolicy.allowed()));
+    }
+
+    TierKey shieldKey = TierKey.of(EquipmentCategory.SHIELD, "default");
+    definitions.put(
+        shieldKey,
+        new EquipmentDefinition(
+            shieldKey,
+            UnlockCondition.always(),
+            RestrictionPolicy.none(),
+            EnchantmentPolicy.allowed()));
+    TierKey elytraKey = TierKey.of(EquipmentCategory.ELYTRA, "default");
+    definitions.put(
+        elytraKey,
+        new EquipmentDefinition(
+            elytraKey,
+            UnlockCondition.always(),
+            RestrictionPolicy.none(),
+            EnchantmentPolicy.allowed()));
+
+    // More items to exceed 45 items limit
+    for (int i = 0; i < 30; i++) {
+      TierKey key = TierKey.of(EquipmentCategory.ARMOR, "extra_" + i);
+      definitions.put(
+          key,
+          new EquipmentDefinition(
+              key,
+              UnlockCondition.always(),
+              RestrictionPolicy.none(),
+              EnchantmentPolicy.allowed()));
+    }
+
+    when(registry.all()).thenReturn(definitions);
+
+    ProgressionGuiView gui = new ProgressionGuiView(application);
+    Inventory inventory = gui.createInventory();
+    assertNotNull(inventory);
+    assertNotNull(inventory.getItem(0));
+    assertNotNull(inventory.getItem(44));
+    assertNotNull(inventory.getItem(49)); // Summary
   }
 
   @Test

@@ -10,6 +10,15 @@ import java.util.Optional;
 /**
  * High-performance query service for determining whether specific player actions or enchantments
  * are blocked for an equipment item based on its compiled tier policy and progression state.
+ *
+ * <p><b>Execution Characteristics:</b>
+ *
+ * <ul>
+ *   <li>Designed specifically for invocation on hot server tick threads (e.g., event listeners).
+ *   <li>Performs $O(1)$ lock-free lookups against in-memory registries without disk or database
+ *       access.
+ *   <li>Unregistered items fail open (treated as unrestricted) to prevent accidental item locks.
+ * </ul>
  */
 public final class RestrictionQueryService {
 
@@ -34,15 +43,13 @@ public final class RestrictionQueryService {
     Objects.requireNonNull(key, "key must not be null");
     Objects.requireNonNull(action, "action must not be null");
 
-    // If unlocked, all actions are allowed
     if (progressionService.isUnlocked(key)) {
       return false;
     }
 
-    // Tier is locked: check restriction policy
     Optional<EquipmentDefinition> definitionOpt = registry.find(key);
     if (definitionOpt.isEmpty()) {
-      return false; // Unregistered tier is unrestricted
+      return false;
     }
 
     return definitionOpt.get().restrictionPolicy().isRestricted(action);

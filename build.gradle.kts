@@ -175,12 +175,12 @@ val jacocoRootCoverageVerification =
                 limit {
                     counter = "INSTRUCTION"
                     value = "COVEREDRATIO"
-                    minimum = "0.80".toBigDecimal()
+                    minimum = "0.90".toBigDecimal()
                 }
                 limit {
                     counter = "LINE"
                     value = "COVEREDRATIO"
-                    minimum = "0.80".toBigDecimal()
+                    minimum = "0.90".toBigDecimal()
                 }
             }
         }
@@ -313,14 +313,32 @@ sonar {
         property("sonar.organization", "kizio806")
         property("sonar.projectName", "GearProgress")
         property("sonar.host.url", "https://sonarcloud.io")
-        property(
-            "sonar.coverage.exclusions",
-            "**/distributions/**,**/distributions/**/*,distributions/**,distributions/**/*,**/build-logic/**,build-logic/**",
-        )
-        property(
-            "sonar.cpd.exclusions",
-            "**/distributions/**,**/distributions/**/*,distributions/**,distributions/**/*,**/build-logic/**,build-logic/**",
-        )
+        val exclusions =
+            listOf(
+                "**/build/**",
+                "**/build-*/**",
+                "**/build-logic/**",
+                "**/distributions/**",
+                "**/generated/**",
+                "**/generated-sources/**",
+                "**/mock/**",
+                "**/testutil/**",
+                "**/bootstrap/**",
+                "**/temporary/**",
+                "**/temp/**",
+                "**/tmp/**",
+                "**/example/**",
+                "**/examples/**",
+                "**/sample/**",
+                "**/samples/**",
+                "**/wrapper/**",
+                "gradle/wrapper/**",
+                "**/src/main/resources/**",
+                "**/src/test/**",
+            ).joinToString(",")
+        property("sonar.exclusions", exclusions)
+        property("sonar.coverage.exclusions", exclusions)
+        property("sonar.cpd.exclusions", exclusions)
     }
 }
 
@@ -330,6 +348,7 @@ subprojects {
     sonar {
         properties {
             if (isContainer || isDistribution) {
+                property("sonar.exclusions", "**/*,**/*.*,**")
                 property("sonar.coverage.exclusions", "**/*,**/*.*,**")
                 property("sonar.cpd.exclusions", "**/*,**/*.*,**")
             } else {

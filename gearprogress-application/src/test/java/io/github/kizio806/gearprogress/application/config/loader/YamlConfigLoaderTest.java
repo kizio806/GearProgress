@@ -119,4 +119,22 @@ class YamlConfigLoaderTest {
     assertEquals(2, spec.maxPoolSize());
     assertEquals(8000L, spec.connectionTimeoutMs());
   }
+
+  @Test
+  void testYamlLoaderEdgeCasesAndFallbacks() throws Exception {
+    assertTrue(loader.parseMap("").isEmpty());
+    assertTrue(loader.parseMap(null).isEmpty());
+    assertTrue(loader.parseMap("- item1\n- item2").isEmpty());
+
+    assertTrue(loader.loadFile(java.nio.file.Path.of("non_existent_file.yml")).isEmpty());
+
+    Instant now = Instant.now();
+    TimersConfigSpec fallbackSpec =
+        loader.parseTimersSpec(Map.of("server-start-epoch", "not-a-date"), now);
+    assertEquals(now, fallbackSpec.serverStartEpoch());
+
+    StorageConfigSpec defaultStorage = loader.parseStorageSpec(Map.of());
+    assertEquals("sqlite", defaultStorage.type());
+    assertEquals("data/gearprogress.db", defaultStorage.file());
+  }
 }

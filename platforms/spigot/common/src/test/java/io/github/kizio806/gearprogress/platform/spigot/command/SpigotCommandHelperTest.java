@@ -46,6 +46,10 @@ class SpigotCommandHelperTest {
     CommandSender sender = mock(CommandSender.class);
     helper.send(sender, "test.key", Map.of("name", "Player"));
     verify(audience).sendMessage(any(Component.class));
+
+    helper.send(sender, "general.no-permission");
+    helper.sendMessage(sender, Component.text("custom message"));
+    assertEquals(locales, helper.locales());
   }
 
   @Test

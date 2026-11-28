@@ -32,8 +32,17 @@ public final class BukkitEventPublisher implements EventPublisherPort {
     server.getPluginManager().callEvent(event);
   }
 
+  /**
+   * Dispatches an enchantment allowance state change event. Currently reserved for future custom
+   * event subscribers.
+   *
+   * @param key the tier key
+   * @param allow whether enchantments are allowed
+   * @param source operator or trigger name
+   */
   @Override
   public void publishEnchantmentAllowed(TierKey key, boolean allow, String source) {
-    // Enchantment policy change dispatch hook
+    Objects.requireNonNull(key, "key must not be null");
+    Objects.requireNonNull(source, "source must not be null");
   }
 }

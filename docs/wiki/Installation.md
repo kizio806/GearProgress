@@ -17,10 +17,10 @@ This guide details how to install and configure **GearProgress** on modern Minec
 
 GearProgress ships with two targeted distribution artifacts:
 
-1. **`GearProgress-<version>-paper.jar`**:
+1. **`gearprogress-<base>-<range>-paper-purpur-folia.jar`**:
    - For **Paper**, **Purpur**, and **Folia** servers.
    - Leverages native Brigadier command trees, asynchronous chunk loading, and Folia's regionized tick schedulers.
-2. **`GearProgress-<version>-spigot.jar`**:
+2. **`gearprogress-<base>-<range>-spigot-bukkit.jar`**:
    - For **Spigot** and **CraftBukkit** servers.
    - Includes standard Bukkit commands and relocated Adventure components.
 

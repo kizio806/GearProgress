@@ -20,7 +20,7 @@ body:
     attributes:
       label: GearProgress Version & Distribution
       description: What version and distribution JAR of GearProgress are you running?
-      placeholder: "e.g., 1.0.0 (GearProgress-1.0.0-paper.jar)"
+      placeholder: "e.g., 1.0.0+mc1.21.x (gearprogress-1.0.0-mc1.21.x-paper-purpur-folia.jar)"
     validations:
       required: true
   - type: textarea

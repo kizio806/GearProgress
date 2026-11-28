@@ -95,6 +95,90 @@ class SpigotMainCommandTest {
   }
 
   @Test
+  @DisplayName("handleReset resets tier state")
+  void testResetSuccess() {
+    when(helper.requirePermission(sender, "gearprogress.admin")).thenReturn(true);
+    TierKey key = TierKey.of(EquipmentCategory.ARMOR, "diamond");
+    EquipmentDefinition def = mock(EquipmentDefinition.class);
+    when(equipmentRegistry.find(key)).thenReturn(Optional.of(def));
+    when(progressionService.lock(eq(key), eq("Admin")))
+        .thenReturn(CompletableFuture.completedFuture(true));
+
+    assertTrue(
+        mainCommand.onCommand(sender, command, "gp", new String[] {"reset", "armor", "diamond"}));
+    verify(progressionService).lock(eq(key), eq("Admin"));
+    verify(helper).send(eq(sender), eq("command.reset.success"), any());
+  }
+
+  @Test
+  @DisplayName("handleStatus displays status of categories and tiers")
+  void testStatusSuccess() {
+    when(helper.requirePermission(sender, "gearprogress.use")).thenReturn(true);
+    TierKey key = TierKey.of(EquipmentCategory.ARMOR, "diamond");
+    EquipmentDefinition def = mock(EquipmentDefinition.class);
+    when(def.key()).thenReturn(key);
+    when(equipmentRegistry.findByCategory(EquipmentCategory.ARMOR)).thenReturn(Map.of(key, def));
+    when(progressionService.isUnlocked(key)).thenReturn(true);
+
+    assertTrue(mainCommand.onCommand(sender, command, "gp", new String[] {"status"}));
+    verify(helper, org.mockito.Mockito.atLeastOnce()).sendMessage(any(), any(Component.class));
+  }
+
+  @Test
+  @DisplayName("handleInfo displays detailed tier info")
+  void testInfoSuccess() {
+    when(helper.requirePermission(sender, "gearprogress.use")).thenReturn(true);
+    TierKey key = TierKey.of(EquipmentCategory.ARMOR, "diamond");
+    EquipmentDefinition def = mock(EquipmentDefinition.class);
+    when(def.key()).thenReturn(key);
+    when(equipmentRegistry.find(key)).thenReturn(Optional.of(def));
+    when(progressionService.isUnlocked(key)).thenReturn(false);
+    when(timerService.timeRemaining(key))
+        .thenReturn(Optional.of(new TimeRemaining(Duration.ofHours(2), false)));
+
+    assertTrue(
+        mainCommand.onCommand(sender, command, "gp", new String[] {"info", "armor", "diamond"}));
+    verify(helper, org.mockito.Mockito.atLeastOnce()).sendMessage(any(), any(Component.class));
+  }
+
+  @Test
+  @DisplayName("handleTimer subcommands execute successfully on valid tiers")
+  void testTimerSubcommandsSuccess() {
+    when(helper.requirePermission(sender, "gearprogress.admin")).thenReturn(true);
+    when(helper.requirePermission(sender, "gearprogress.use")).thenReturn(true);
+    TierKey key = TierKey.of(EquipmentCategory.ARMOR, "diamond");
+    EquipmentDefinition def = mock(EquipmentDefinition.class);
+    when(def.key()).thenReturn(key);
+    when(equipmentRegistry.find(key)).thenReturn(Optional.of(def));
+    when(timerService.timeRemaining(key))
+        .thenReturn(Optional.of(new TimeRemaining(Duration.ofHours(2), false)));
+    when(timerService.isPaused(key)).thenReturn(false);
+
+    assertTrue(
+        mainCommand.onCommand(
+            sender, command, "gp", new String[] {"timer", "status", "armor", "diamond"}));
+    assertTrue(
+        mainCommand.onCommand(
+            sender, command, "gp", new String[] {"timer", "pause", "armor", "diamond"}));
+    verify(timerService).pause(key);
+
+    assertTrue(
+        mainCommand.onCommand(
+            sender, command, "gp", new String[] {"timer", "resume", "armor", "diamond"}));
+    verify(timerService).resume(key);
+
+    assertTrue(
+        mainCommand.onCommand(
+            sender, command, "gp", new String[] {"timer", "add", "armor", "diamond", "1h"}));
+    verify(timerService).addElapsed(key, Duration.ofHours(1));
+
+    assertTrue(
+        mainCommand.onCommand(
+            sender, command, "gp", new String[] {"timer", "set", "armor", "diamond", "2d"}));
+    verify(timerService).setElapsed(key, Duration.ofDays(2));
+  }
+
+  @Test
   @DisplayName("handleLock forces lock of valid tier")
   void testLock() {
     when(helper.requirePermission(sender, "gearprogress.admin")).thenReturn(true);
@@ -210,13 +294,11 @@ class SpigotMainCommandTest {
   void testUnlockAndLockValidation() {
     when(helper.requirePermission(sender, "gearprogress.admin")).thenReturn(true);
 
-    // Missing args
     assertTrue(mainCommand.onCommand(sender, command, "gp", new String[] {"unlock"}));
     assertTrue(mainCommand.onCommand(sender, command, "gp", new String[] {"lock"}));
     assertTrue(mainCommand.onCommand(sender, command, "gp", new String[] {"reset"}));
     assertTrue(mainCommand.onCommand(sender, command, "gp", new String[] {"info"}));
 
-    // Invalid category or tier
     assertTrue(
         mainCommand.onCommand(
             sender, command, "gp", new String[] {"unlock", "unknowncat", "diamond"}));
@@ -237,17 +319,14 @@ class SpigotMainCommandTest {
     when(helper.requirePermission(sender, "gearprogress.admin")).thenReturn(true);
     when(helper.requirePermission(sender, "gearprogress.use")).thenReturn(true);
 
-    // < 2 args
     assertTrue(mainCommand.onCommand(sender, command, "gp", new String[] {"timer"}));
 
-    // status with < 4 args and invalid tier
     assertTrue(
         mainCommand.onCommand(sender, command, "gp", new String[] {"timer", "status", "armor"}));
     assertTrue(
         mainCommand.onCommand(
             sender, command, "gp", new String[] {"timer", "status", "badcat", "tier"}));
 
-    // pause/resume with < 4 args and invalid tier
     assertTrue(
         mainCommand.onCommand(sender, command, "gp", new String[] {"timer", "pause", "armor"}));
     assertTrue(
@@ -259,7 +338,6 @@ class SpigotMainCommandTest {
         mainCommand.onCommand(
             sender, command, "gp", new String[] {"timer", "resume", "badcat", "tier"}));
 
-    // add/set with < 5 args, invalid tier, invalid duration, unknown action
     assertTrue(
         mainCommand.onCommand(
             sender, command, "gp", new String[] {"timer", "add", "armor", "diamond"}));
@@ -291,17 +369,14 @@ class SpigotMainCommandTest {
     ProgressionGuiView mockGui = mock(ProgressionGuiView.class);
     SpigotMainCommand cmdWithGui = new SpigotMainCommand(application, helper, mockGui);
 
-    // Console sender
     assertTrue(cmdWithGui.onCommand(sender, command, "gp", new String[] {"view"}));
     verify(mockGui, org.mockito.Mockito.never()).open(any());
 
-    // Player with permission
     org.bukkit.entity.Player player = mock(org.bukkit.entity.Player.class);
     when(helper.requirePermission(player, "gearprogress.use")).thenReturn(true);
     assertTrue(cmdWithGui.onCommand(player, command, "gp", new String[] {"view"}));
     verify(mockGui).open(player);
 
-    // Player without permission
     org.bukkit.entity.Player playerNoPerm = mock(org.bukkit.entity.Player.class);
     when(helper.requirePermission(playerNoPerm, "gearprogress.use")).thenReturn(false);
     assertTrue(cmdWithGui.onCommand(playerNoPerm, command, "gp", new String[] {"view"}));

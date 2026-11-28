@@ -18,7 +18,17 @@ import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 
-/** Core application service coordinating equipment tier state transitions (unlock, lock, reset). */
+/**
+ * Core application service coordinating equipment tier state transitions (unlock, lock, reset).
+ *
+ * <p><b>State Caching & Performance:</b> Maintains an in-memory {@link ConcurrentHashMap} of all
+ * active tier progress states. All query methods read directly from memory in $O(1)$ time with zero
+ * locks and zero disk I/O, guaranteeing safety when called on hot Minecraft tick threads.
+ *
+ * <p><b>Persistence & Events:</b> Mutations atomically update in-memory state, queue asynchronous
+ * database updates via {@link ProgressionRepository}, and dispatch domain events through {@link
+ * EventPublisherPort}.
+ */
 public final class ProgressionService {
 
   private final EquipmentRegistry registry;
@@ -53,7 +63,6 @@ public final class ProgressionService {
               Instant now = timePort.now();
               java.util.List<CompletableFuture<Void>> saveFutures = new java.util.ArrayList<>();
 
-              // Seed all registered definitions
               for (EquipmentDefinition def : registry.all().values()) {
                 TierKey key = def.key();
                 Optional<TierProgressState> existing = snapshot.findState(key);
@@ -61,7 +70,6 @@ public final class ProgressionService {
                 if (existing.isPresent()) {
                   runtimeStates.put(key, existing.get());
                 } else {
-                  // Initialize according to configured unlock condition
                   boolean initialUnlocked = def.unlockCondition() instanceof UnlockCondition.Always;
                   TierProgressState state =
                       initialUnlocked
@@ -97,11 +105,10 @@ public final class ProgressionService {
     if (state != null) {
       return state.isUnlocked();
     }
-    // Check if definition is configured as 'always'
     return registry
         .find(key)
         .map(def -> def.unlockCondition() instanceof UnlockCondition.Always)
-        .orElse(true); // Unregistered items default to unlocked
+        .orElse(true);
   }
 
   /**

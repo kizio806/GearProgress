@@ -1,41 +1,44 @@
 # Support Policy
 
-Thank you for using **GearProgress**. This document provides guidelines on how to get assistance, report bugs, ask configuration questions, and engage with the maintainers.
+Thank you for using **GearProgress**! This document provides guidelines on how to get assistance, report bugs, ask configuration questions, and engage with the maintainers.
 
 ---
 
-## Getting Help
+## 📖 Getting Help
 
-Before opening an issue, please consult the project documentation:
-- [Installation Guide](docs/installation.md) — Server requirements, distribution JAR selection (Paper vs Spigot), and initial setup.
-- [Compatibility Matrix](docs/compatibility-matrix.md) — Supported Minecraft versions (1.21.x), server platforms (Paper, Purpur, Folia, Spigot), and Java runtime requirements (Java 21).
-- [Architecture Guide](docs/architecture.md) — Hexagonal modularity, persistence layer, Folia scheduler integration, and domain isolation.
-- [Troubleshooting](docs/troubleshooting.md) — Common configuration errors, SQLite write lock resolutions, Folia threading notes, and event precedence.
-- [Wiki Documentation](docs/wiki/Home.md) — In-depth administrator manual, YAML schema references, command permissions, and PlaceholderAPI placeholders.
+Before opening an issue, please consult the official documentation:
+- [Installation Guide](docs/installation.md) — Platform requirements, distribution selection, and first setup.
+- [Configuration Guide](docs/wiki/Configuration.md) — Comprehensive YAML configuration options for `config.yml`, `equipment.yml`, and `timers.yml`.
+- [Commands & Permissions](docs/wiki/Commands-and-Permissions.md) — Full CLI command reference, syntax, and permission nodes.
+- [Architecture Guide](docs/architecture.md) — Hexagonal design, ports, single-writer SQLite persistence, and Folia thread safety.
+- [Troubleshooting](docs/troubleshooting.md) — Solutions for common issues (SQLite locking, bypass permissions, PlaceholderAPI integration).
+- [Wiki Documentation](docs/wiki/Home.md) — Comprehensive progression presets and deployment examples.
 
 ---
 
-## Communication Channels
+## 💬 Communication Channels
 
 ### 1. GitHub Issues
 GitHub Issues are reserved for:
-- **Bug Reports:** Incorrect restriction blocking, SQLite persistence errors, event listener conflicts, or Folia task exceptions.
-- **Feature Requests:** Additional unlock conditions, new equipment category support, or storage backend adapters.
-- **Compatibility Reports:** Issues encountered on specific server forks or build numbers.
+- **Bug Reports:** Restriction bypasses, inventory event anomalies, parser failures, or database synchronization errors.
+- **Feature Requests:** New unlock methods, restriction types, sound/particle feedback options, or command enhancements.
+- **Platform Compatibility Reports:** Issues observed with specific Paper, Purpur, Folia, or Spigot builds.
 
-Please use the appropriate [Issue Template](.github/ISSUE_TEMPLATE) when submitting tickets.
+Please use the appropriate [Issue Template](.github/ISSUE_TEMPLATE) when submitting tickets and provide server logs, plugin versions, and configuration files.
 
 ### 2. Security Vulnerabilities
-If you identify a security issue or critical flaw, please review our [Security Policy](SECURITY.md) and submit a report privately.
+If you discover a security vulnerability, inventory duplication vector, or denial-of-service hazard, please review our [Security Policy](SECURITY.md) and report it privately via [GitHub Security Advisories](https://github.com/kizio806/GearProgress/security) rather than filing a public issue.
 
 ### 3. Community Discussions
-For configuration showcases, SMP server setups, or general help, visit our [GitHub Discussions](https://github.com/kizio806/GearProgress/discussions).
+For configuration help, SMP progression design ideas, or general discussion, participate in [GitHub Discussions](https://github.com/kizio806/GearProgress/discussions).
 
 ---
 
-## Supported Server Platforms
+## 🗺️ Supported Versions Matrix
 
-Active support and testing are guaranteed for:
-- **Paper / Purpur 1.21.x:** Supported via `GearProgress-<version>-paper.jar` (Brigadier commands, native asynchronous events).
-- **Folia 1.21.x:** Supported via `GearProgress-<version>-paper.jar` (Regionized multi-threaded tick scheduler).
-- **Spigot / CraftBukkit 1.21.x:** Supported via `GearProgress-<version>-spigot.jar` (Bukkit scheduler, standard commands).
+Active bugfixes and patch releases are supported across our multi-version branches:
+
+| Minecraft Line | Supported Minecraft Versions | Server Platforms | Git Branch | Java Baseline |
+|---|---|---|---|---|
+| **Minecraft 1.21.x** | 1.21, 1.21.1, 1.21.2, 1.21.3, 1.21.4, 1.21.11 | Paper, Purpur, Folia, Spigot, CraftBukkit | [`main`](https://github.com/kizio806/GearProgress) | Java 21 |
+| **Minecraft 1.21.x (LTS)** | 1.21, 1.21.1, 1.21.2, 1.21.3, 1.21.4, 1.21.11 | Paper, Purpur, Folia, Spigot, CraftBukkit | [`support/1.21.x`](https://github.com/kizio806/GearProgress/tree/support/1.21.x) | Java 21 |

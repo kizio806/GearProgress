@@ -11,13 +11,18 @@ import org.bukkit.inventory.ItemStack;
 /**
  * High-performance classifier mapping Bukkit {@link Material} and {@link ItemStack}s to their
  * corresponding {@link TierKey}.
+ *
+ * <p><b>Performance Design:</b> Utilizes a pre-populated {@link EnumMap} backed by ordinal
+ * indexing, providing $O(1)$ lookups with zero heap allocation during hot event listener execution.
+ *
+ * <p><b>Edge Cases:</b> Returns {@link Optional#empty()} for {@code null}, {@link Material#AIR},
+ * and non-equipment materials, ensuring listeners exit early without unnecessary processing.
  */
 public final class ItemClassifier {
 
   private static final Map<Material, TierKey> MATERIAL_TIER_MAP = new EnumMap<>(Material.class);
 
   static {
-    // Armor: Leather
     register(
         EquipmentCategory.ARMOR,
         "leather",
@@ -25,7 +30,6 @@ public final class ItemClassifier {
         Material.LEATHER_CHESTPLATE,
         Material.LEATHER_LEGGINGS,
         Material.LEATHER_BOOTS);
-    // Armor: Chainmail
     register(
         EquipmentCategory.ARMOR,
         "chainmail",
@@ -33,7 +37,6 @@ public final class ItemClassifier {
         Material.CHAINMAIL_CHESTPLATE,
         Material.CHAINMAIL_LEGGINGS,
         Material.CHAINMAIL_BOOTS);
-    // Armor: Iron
     register(
         EquipmentCategory.ARMOR,
         "iron",
@@ -41,7 +44,6 @@ public final class ItemClassifier {
         Material.IRON_CHESTPLATE,
         Material.IRON_LEGGINGS,
         Material.IRON_BOOTS);
-    // Armor: Golden
     register(
         EquipmentCategory.ARMOR,
         "golden",
@@ -49,7 +51,6 @@ public final class ItemClassifier {
         Material.GOLDEN_CHESTPLATE,
         Material.GOLDEN_LEGGINGS,
         Material.GOLDEN_BOOTS);
-    // Armor: Diamond
     register(
         EquipmentCategory.ARMOR,
         "diamond",
@@ -57,7 +58,6 @@ public final class ItemClassifier {
         Material.DIAMOND_CHESTPLATE,
         Material.DIAMOND_LEGGINGS,
         Material.DIAMOND_BOOTS);
-    // Armor: Netherite
     register(
         EquipmentCategory.ARMOR,
         "netherite",
@@ -65,10 +65,8 @@ public final class ItemClassifier {
         Material.NETHERITE_CHESTPLATE,
         Material.NETHERITE_LEGGINGS,
         Material.NETHERITE_BOOTS);
-    // Armor: Turtle
     register(EquipmentCategory.ARMOR, "turtle", Material.TURTLE_HELMET);
 
-    // Tools: Wooden
     register(
         EquipmentCategory.TOOLS,
         "wooden",
@@ -76,7 +74,6 @@ public final class ItemClassifier {
         Material.WOODEN_AXE,
         Material.WOODEN_SHOVEL,
         Material.WOODEN_HOE);
-    // Tools: Stone
     register(
         EquipmentCategory.TOOLS,
         "stone",
@@ -84,7 +81,6 @@ public final class ItemClassifier {
         Material.STONE_AXE,
         Material.STONE_SHOVEL,
         Material.STONE_HOE);
-    // Tools: Iron
     register(
         EquipmentCategory.TOOLS,
         "iron",
@@ -92,7 +88,6 @@ public final class ItemClassifier {
         Material.IRON_AXE,
         Material.IRON_SHOVEL,
         Material.IRON_HOE);
-    // Tools: Golden
     register(
         EquipmentCategory.TOOLS,
         "golden",
@@ -100,7 +95,6 @@ public final class ItemClassifier {
         Material.GOLDEN_AXE,
         Material.GOLDEN_SHOVEL,
         Material.GOLDEN_HOE);
-    // Tools: Diamond
     register(
         EquipmentCategory.TOOLS,
         "diamond",
@@ -108,7 +102,6 @@ public final class ItemClassifier {
         Material.DIAMOND_AXE,
         Material.DIAMOND_SHOVEL,
         Material.DIAMOND_HOE);
-    // Tools: Netherite
     register(
         EquipmentCategory.TOOLS,
         "netherite",
@@ -117,28 +110,18 @@ public final class ItemClassifier {
         Material.NETHERITE_SHOVEL,
         Material.NETHERITE_HOE);
 
-    // Weapons: Wooden
     register(EquipmentCategory.WEAPONS, "wooden", Material.WOODEN_SWORD);
-    // Weapons: Stone
     register(EquipmentCategory.WEAPONS, "stone", Material.STONE_SWORD);
-    // Weapons: Iron
     register(EquipmentCategory.WEAPONS, "iron", Material.IRON_SWORD);
-    // Weapons: Golden
     register(EquipmentCategory.WEAPONS, "golden", Material.GOLDEN_SWORD);
-    // Weapons: Diamond
     register(EquipmentCategory.WEAPONS, "diamond", Material.DIAMOND_SWORD);
-    // Weapons: Netherite
     register(EquipmentCategory.WEAPONS, "netherite", Material.NETHERITE_SWORD);
-    // Special weapons
     register(EquipmentCategory.WEAPONS, "bow", Material.BOW);
     register(EquipmentCategory.WEAPONS, "crossbow", Material.CROSSBOW);
     register(EquipmentCategory.WEAPONS, "trident", Material.TRIDENT);
     register(EquipmentCategory.WEAPONS, "mace", Material.MACE);
 
-    // Shield
     register(EquipmentCategory.SHIELD, "default", Material.SHIELD);
-
-    // Elytra
     register(EquipmentCategory.ELYTRA, "default", Material.ELYTRA);
   }
 

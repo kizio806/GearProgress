@@ -63,27 +63,22 @@ class ProgressionServiceTest {
     assertTrue(service.isEnchantmentAllowed(iron));
     assertFalse(service.isEnchantmentAllowed(diamond));
 
-    // Unlock diamond
     boolean changed = service.unlock(diamond, UnlockMethod.COMMAND, "ADMIN").join();
     assertTrue(changed);
     assertTrue(service.isUnlocked(diamond));
     assertEquals(1, eventPublisher.unlockEvents.size());
 
-    // Second unlock returns false
     boolean secondChange = service.unlock(diamond, UnlockMethod.COMMAND, "ADMIN").join();
     assertFalse(secondChange);
 
-    // Lock diamond
     boolean lockedChanged = service.lock(diamond, "ADMIN").join();
     assertTrue(lockedChanged);
     assertFalse(service.isUnlocked(diamond));
     assertEquals(1, eventPublisher.lockEvents.size());
 
-    // Lock diamond again returns false
     boolean secondLock = service.lock(diamond, "ADMIN").join();
     assertFalse(secondLock);
 
-    // Lock unregistered tier
     TierKey unregisteredNetherite = TierKey.of(EquipmentCategory.ARMOR, "netherite");
     boolean lockedUnregistered = service.lock(unregisteredNetherite, "ADMIN").join();
     assertTrue(lockedUnregistered);
@@ -107,11 +102,32 @@ class ProgressionServiceTest {
     service.reset(EquipmentCategory.ARMOR, "ADMIN").join();
     assertFalse(service.isUnlocked(diamond));
 
-    // Reset all categories (null category)
     service.unlock(diamond, UnlockMethod.COMMAND, "ADMIN").join();
     assertTrue(service.isUnlocked(diamond));
     service.reset(null, "ADMIN").join();
     assertFalse(service.isUnlocked(diamond));
+
+    TierKey leather = TierKey.of(EquipmentCategory.ARMOR, "leather");
+    registry.register(
+        new EquipmentDefinition(
+            leather,
+            UnlockCondition.always(),
+            RestrictionPolicy.none(),
+            EnchantmentPolicy.allowed()));
+    service.initialize().join();
+    assertTrue(service.isUnlocked(leather));
+    service.lock(leather, "ADMIN").join();
+    assertFalse(service.isUnlocked(leather));
+    service.reset(EquipmentCategory.ARMOR, "ADMIN").join();
+    assertTrue(service.isUnlocked(leather));
+  }
+
+  @Test
+  void testUnlockUnregisteredTier() {
+    TierKey unregistered = TierKey.of(EquipmentCategory.TOOLS, "copper");
+    boolean unlocked = service.unlock(unregistered, UnlockMethod.COMMAND, "ADMIN").join();
+    assertTrue(unlocked);
+    assertTrue(service.isUnlocked(unregistered));
   }
 
   @Test
@@ -131,11 +147,9 @@ class ProgressionServiceTest {
     assertTrue(service.isEnchantmentAllowed(diamond));
     assertEquals(1, eventPublisher.enchantEvents.size());
 
-    // Setting same value
     service.setEnchantmentAllowed(diamond, true, "ADMIN").join();
     assertTrue(service.isEnchantmentAllowed(diamond));
 
-    // Setting enchantment on unregistered tier returns completed future without state change
     TierKey unregisteredTool = TierKey.of(EquipmentCategory.TOOLS, "copper");
     service.setEnchantmentAllowed(unregisteredTool, false, "ADMIN").join();
     assertTrue(service.isEnchantmentAllowed(unregisteredTool));
@@ -143,7 +157,6 @@ class ProgressionServiceTest {
     assertTrue(service.state(diamond).isPresent());
     assertEquals(1, service.snapshot().states().size());
 
-    // Unregistered tier defaults
     TierKey unregistered = TierKey.of(EquipmentCategory.WEAPONS, "diamond");
     assertTrue(service.isUnlocked(unregistered));
     assertTrue(service.isEnchantmentAllowed(unregistered));

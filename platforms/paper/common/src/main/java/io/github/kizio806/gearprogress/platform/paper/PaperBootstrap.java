@@ -34,7 +34,14 @@ import java.util.Objects;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
 
-/** Composition Root for GearProgress on the Paper server platform. */
+/**
+ * Composition Root for GearProgress on the Paper/Purpur/Folia server platform.
+ *
+ * <p><b>Lifecycle & Wiring:</b> Wires together native Paper services, registers Brigadier commands
+ * via Paper LifecycleEvents API, and connects {@link
+ * io.github.kizio806.gearprogress.platform.paper.scheduler.PaperTaskScheduler} to guarantee Folia
+ * region scheduler compatibility.
+ */
 public final class PaperBootstrap implements BukkitBootstrapLifecycle {
 
   private final JavaPlugin plugin;

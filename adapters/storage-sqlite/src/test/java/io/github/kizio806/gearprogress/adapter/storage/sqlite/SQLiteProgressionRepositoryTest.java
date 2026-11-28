@@ -45,12 +45,10 @@ class SQLiteProgressionRepositoryTest {
     assertFalse(snapshot.isUnlocked(diamond));
     assertEquals(2, snapshot.states().size());
 
-    // Update diamond to unlocked
     TierProgressState unlockedDiamond =
         diamondState.withUnlocked(UnlockMethod.TIMER, "SYSTEM", now.plusSeconds(3600));
     repo.saveTierState(unlockedDiamond).join();
 
-    // Close repository
     repo.close();
 
     // Reopen from disk (testing restart recovery)
@@ -61,7 +59,6 @@ class SQLiteProgressionRepositoryTest {
     assertTrue(recovered.isUnlocked(diamond));
     assertEquals("SYSTEM", recovered.findState(diamond).orElseThrow().unlockedBy().orElseThrow());
 
-    // Test saveAll
     TierKey elytra = TierKey.of(EquipmentCategory.ELYTRA, "default");
     TierProgressState elytraState =
         TierProgressState.initialUnlocked(elytra, UnlockMethod.DATE, true, "CONFIG", now);

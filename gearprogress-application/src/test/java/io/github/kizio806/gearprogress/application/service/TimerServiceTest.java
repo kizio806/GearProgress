@@ -18,6 +18,7 @@ import io.github.kizio806.gearprogress.core.model.unlock.UnlockCondition;
 import io.github.kizio806.gearprogress.core.model.unlock.UnlockMethod;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -77,18 +78,15 @@ class TimerServiceTest {
     progressionService.initialize().join();
     assertFalse(progressionService.isUnlocked(diamond));
 
-    // Check time remaining at start: 7 days
     var remaining = timerService.timeRemaining(diamond);
     assertTrue(remaining.isPresent());
     assertEquals(Duration.ofDays(7), remaining.get().remaining());
 
-    // Advance clock by 3 days
     clock.set(clock.get().plus(Duration.ofDays(3)));
     timerService.evaluateProgression().join();
     assertFalse(progressionService.isUnlocked(diamond));
     assertEquals(Duration.ofDays(4), timerService.timeRemaining(diamond).orElseThrow().remaining());
 
-    // Advance clock by another 4 days (total 7 days)
     clock.set(clock.get().plus(Duration.ofDays(4)));
     timerService.evaluateProgression().join();
     assertTrue(progressionService.isUnlocked(diamond));
@@ -108,11 +106,9 @@ class TimerServiceTest {
     progressionService.initialize().join();
     assertFalse(progressionService.isUnlocked(elytra));
 
-    // Before date
     timerService.evaluateProgression().join();
     assertFalse(progressionService.isUnlocked(elytra));
 
-    // Fast forward to after date
     clock.set(target.plusSeconds(60));
     timerService.evaluateProgression().join();
     assertTrue(progressionService.isUnlocked(elytra));
@@ -146,16 +142,13 @@ class TimerServiceTest {
 
     progressionService.initialize().join();
 
-    // Check server start epoch
     assertEquals(clock.get(), timerService.serverStartEpoch());
 
-    // Pause timer and advance clock
     timerService.pause(diamond);
     clock.set(clock.get().plus(Duration.ofDays(2)));
     timerService.evaluateProgression().join();
     assertFalse(progressionService.isUnlocked(diamond));
 
-    // Create spec
     Instant epoch = clock.get().minus(Duration.ofDays(2));
     io.github.kizio806.gearprogress.application.config.spec.TimersConfigSpec spec =
         new io.github.kizio806.gearprogress.application.config.spec.TimersConfigSpec(
@@ -163,7 +156,6 @@ class TimerServiceTest {
             java.util.Map.of(diamond.toString(), true),
             java.util.Map.of(diamond.toString(), 3600L));
 
-    // Create fresh timer service and load spec
     TimePort timePort = clock::get;
     LifecycleReporterPort dummyReporter =
         new LifecycleReporterPort() {
@@ -182,11 +174,9 @@ class TimerServiceTest {
     assertTrue(restored.isPaused(diamond));
     assertEquals(epoch, restored.serverStartEpoch());
 
-    // Resume and evaluate
     restored.resume(diamond);
     assertFalse(restored.isPaused(diamond));
 
-    // Time remaining for untracked tier
     TierKey commandTier = TierKey.of(EquipmentCategory.ARMOR, "iron");
     registry.register(
         new EquipmentDefinition(
@@ -195,5 +185,40 @@ class TimerServiceTest {
             RestrictionPolicy.none(),
             EnchantmentPolicy.allowed()));
     assertTrue(restored.timeRemaining(commandTier).isEmpty());
+  }
+
+  @Test
+  void testTimerEdgeCasesAndErrorHandling() {
+    TierKey diamond = TierKey.of(EquipmentCategory.ARMOR, "diamond");
+    registry.register(
+        new EquipmentDefinition(
+            diamond,
+            UnlockCondition.timer(Duration.ofDays(7)),
+            RestrictionPolicy.all(),
+            EnchantmentPolicy.forbidden()));
+
+    progressionService.initialize().join();
+
+    // Clock set before server start epoch
+    clock.set(timerService.serverStartEpoch().minus(Duration.ofDays(1)));
+    var remainingBeforeEpoch = timerService.timeRemaining(diamond);
+    assertTrue(remainingBeforeEpoch.isPresent());
+    assertEquals(Duration.ofDays(7), remainingBeforeEpoch.get().remaining());
+
+    // Remaining clamped to Duration.ZERO when elapsed >= delay but evaluateProgression not yet
+    // called
+    timerService.addElapsed(diamond, Duration.ofDays(10));
+    var zeroRemaining = timerService.timeRemaining(diamond);
+    assertTrue(zeroRemaining.isPresent());
+    assertEquals(Duration.ZERO, zeroRemaining.get().remaining());
+    assertTrue(zeroRemaining.get().isExpired());
+
+    // loadFromSpec with invalid keys (should be ignored and logged without crashing)
+    io.github.kizio806.gearprogress.application.config.spec.TimersConfigSpec invalidKeySpec =
+        new io.github.kizio806.gearprogress.application.config.spec.TimersConfigSpec(
+            timerService.serverStartEpoch(),
+            Map.of("invalid_format_key", true),
+            Map.of("invalid_accumulated_key", 100L));
+    timerService.loadFromSpec(invalidKeySpec);
   }
 }

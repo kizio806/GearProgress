@@ -158,4 +158,78 @@ class EquipRestrictionListenerTest {
 
     verify(event).setCancelled(true);
   }
+
+  @Test
+  @DisplayName("Number key hotbar swap into armor slot is cancelled when restricted")
+  void testNumberKeyHotbarSwapRestricted() {
+    InventoryClickEvent event = mock(InventoryClickEvent.class);
+    Player player = mock(Player.class);
+    org.bukkit.inventory.PlayerInventory playerInv =
+        mock(org.bukkit.inventory.PlayerInventory.class);
+    ItemStack hotbarItem = mock(ItemStack.class);
+
+    when(event.getWhoClicked()).thenReturn(player);
+    when(event.getSlotType()).thenReturn(InventoryType.SlotType.ARMOR);
+    when(event.getClick()).thenReturn(ClickType.NUMBER_KEY);
+    when(event.getHotbarButton()).thenReturn(2);
+    when(player.getInventory()).thenReturn(playerInv);
+    when(playerInv.getItem(2)).thenReturn(hotbarItem);
+    when(hotbarItem.getAmount()).thenReturn(1);
+    when(hotbarItem.getType()).thenReturn(Material.NETHERITE_BOOTS);
+
+    TierKey key = TierKey.of(EquipmentCategory.ARMOR, "netherite");
+    when(feedback.canBypass(player)).thenReturn(false);
+    when(queryService.isActionRestricted(key, RestrictionType.EQUIP)).thenReturn(true);
+
+    listener.onInventoryClick(event);
+
+    verify(event).setCancelled(true);
+    verify(feedback).notifyRestricted(player, key, RestrictionType.EQUIP);
+  }
+
+  @Test
+  @DisplayName("Non-restricted actions and bypass permissions pass without cancellation")
+  void testAllowedAndBypassActions() {
+    Player player = mock(Player.class);
+    when(feedback.canBypass(player)).thenReturn(true);
+
+    PlayerInteractEvent interactEvent = mock(PlayerInteractEvent.class);
+    when(interactEvent.getAction()).thenReturn(Action.RIGHT_CLICK_AIR);
+    when(interactEvent.getPlayer()).thenReturn(player);
+    ItemStack armor = mock(ItemStack.class);
+    when(armor.getAmount()).thenReturn(1);
+    when(armor.getType()).thenReturn(Material.DIAMOND_CHESTPLATE);
+    when(interactEvent.getItem()).thenReturn(armor);
+    listener.onPlayerInteract(interactEvent);
+    verify(interactEvent, org.mockito.Mockito.never()).setCancelled(true);
+
+    PlayerInteractEvent leftClick = mock(PlayerInteractEvent.class);
+    when(leftClick.getAction()).thenReturn(Action.LEFT_CLICK_AIR);
+    listener.onPlayerInteract(leftClick);
+    verify(leftClick, org.mockito.Mockito.never()).setCancelled(true);
+
+    Player nonBypassPlayer = mock(Player.class);
+    when(feedback.canBypass(nonBypassPlayer)).thenReturn(false);
+    PlayerInteractEvent swordInteract = mock(PlayerInteractEvent.class);
+    when(swordInteract.getAction()).thenReturn(Action.RIGHT_CLICK_AIR);
+    when(swordInteract.getPlayer()).thenReturn(nonBypassPlayer);
+    ItemStack sword = mock(ItemStack.class);
+    when(sword.getAmount()).thenReturn(1);
+    when(sword.getType()).thenReturn(Material.DIAMOND_SWORD);
+    when(swordInteract.getItem()).thenReturn(sword);
+    listener.onPlayerInteract(swordInteract);
+    verify(swordInteract, org.mockito.Mockito.never()).setCancelled(true);
+
+    InventoryDragEvent dragEvent = mock(InventoryDragEvent.class);
+    when(dragEvent.getWhoClicked()).thenReturn(nonBypassPlayer);
+    when(dragEvent.getRawSlots()).thenReturn(Set.of(12, 13));
+    listener.onInventoryDrag(dragEvent);
+    verify(dragEvent, org.mockito.Mockito.never()).setCancelled(true);
+
+    BlockDispenseArmorEvent dispenseEvent = mock(BlockDispenseArmorEvent.class);
+    org.bukkit.entity.ArmorStand stand = mock(org.bukkit.entity.ArmorStand.class);
+    when(dispenseEvent.getTargetEntity()).thenReturn(stand);
+    listener.onDispenseArmor(dispenseEvent);
+    verify(dispenseEvent, org.mockito.Mockito.never()).setCancelled(true);
+  }
 }

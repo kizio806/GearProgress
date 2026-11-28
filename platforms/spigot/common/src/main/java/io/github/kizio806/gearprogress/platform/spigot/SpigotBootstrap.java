@@ -36,7 +36,13 @@ import org.bukkit.command.PluginCommand;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
 
-/** Composition Root for GearProgress on the Spigot/Bukkit server platform. */
+/**
+ * Composition Root for GearProgress on the Spigot/CraftBukkit server platform.
+ *
+ * <p><b>Lifecycle & Wiring:</b> Wires classic Bukkit commands ({@code PluginCommand}), connects
+ * relocated {@link BukkitAudiences} for Adventure MiniMessage support, and binds {@link
+ * io.github.kizio806.gearprogress.platform.spigot.scheduler.SpigotTaskScheduler}.
+ */
 public final class SpigotBootstrap implements BukkitBootstrapLifecycle {
 
   private final JavaPlugin plugin;

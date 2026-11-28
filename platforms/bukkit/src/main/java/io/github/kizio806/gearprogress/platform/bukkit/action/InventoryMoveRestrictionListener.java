@@ -16,7 +16,12 @@ import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.inventory.ItemStack;
 
-/** Listens to inventory and item movement events to block moving restricted equipment tiers. */
+/**
+ * Listens to inventory and item movement events to block moving restricted equipment tiers.
+ *
+ * <p><b>Validation Scope:</b> Validates current slot contents, cursor items, hotbar number-key
+ * swaps, offhand swaps, and item drops to prevent moving restricted items.
+ */
 public final class InventoryMoveRestrictionListener implements Listener {
 
   private final RestrictionQueryService queryService;
@@ -38,7 +43,6 @@ public final class InventoryMoveRestrictionListener implements Listener {
       return;
     }
 
-    // Check clicked item
     ItemStack current = event.getCurrentItem();
     if (current != null && current.getAmount() > 0) {
       Optional<TierKey> tierKeyOpt = ItemClassifier.classify(current);
@@ -50,7 +54,6 @@ public final class InventoryMoveRestrictionListener implements Listener {
       }
     }
 
-    // Check cursor item
     ItemStack cursor = event.getCursor();
     if (cursor != null && cursor.getAmount() > 0) {
       Optional<TierKey> tierKeyOpt = ItemClassifier.classify(cursor);
@@ -62,7 +65,6 @@ public final class InventoryMoveRestrictionListener implements Listener {
       }
     }
 
-    // Check number key swap item
     if (event.getClick() == ClickType.NUMBER_KEY && event.getHotbarButton() >= 0) {
       ItemStack hotbarItem = player.getInventory().getItem(event.getHotbarButton());
       if (hotbarItem != null && hotbarItem.getAmount() > 0) {

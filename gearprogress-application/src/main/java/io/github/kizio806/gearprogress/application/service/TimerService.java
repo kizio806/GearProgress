@@ -17,7 +17,16 @@ import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 
-/** Service managing timer states, time calculations, and automated tier unlocking. */
+/**
+ * Service managing timer states, time calculations, and automated tier unlocking.
+ *
+ * <p><b>Pacing Engine:</b> Calculates remaining durations against server launch epochs, tracks
+ * administrative pause states, and evaluates progression when background timer tasks trigger.
+ *
+ * <p><b>Thread Safety:</b> Internal state maps are thread-safe ({@link ConcurrentHashMap}),
+ * ensuring non-blocking queries from command executors and placeholder expansions while background
+ * evaluations run asynchronously.
+ */
 public final class TimerService {
 
   private final ProgressionService progressionService;

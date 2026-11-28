@@ -94,7 +94,6 @@ class GearProgressMainCommandTest {
     locales = LocaleCatalog.of(map);
     when(application.localeCatalog()).thenReturn(locales);
 
-    // Register some test tiers
     TierKey diamondArmor = TierKey.of(EquipmentCategory.ARMOR, "diamond");
     registry.register(
         new EquipmentDefinition(
@@ -233,16 +232,133 @@ class GearProgressMainCommandTest {
         PaperCommandTestSupport.createDispatcher();
     testDispatcher.register(customCmd.buildCommand());
 
-    // Console execution
     testDispatcher.execute("gearprogress view", source);
     verify(mockGui, org.mockito.Mockito.never()).open(any());
 
-    // Player execution
     org.bukkit.entity.Player player = mock(org.bukkit.entity.Player.class);
     when(player.hasPermission("gearprogress.use")).thenReturn(true);
     CommandSourceStack playerSource = PaperCommandTestSupport.createMockSource(player);
 
     testDispatcher.execute("gearprogress view", playerSource);
     verify(mockGui).open(player);
+  }
+
+  @Test
+  @DisplayName(
+      "Executing commands with invalid categories, tiers, or states handles errors gracefully")
+  void testCommandErrorsAndEdgeCases() throws Exception {
+    dispatcher.execute("gearprogress info unknown diamond", source);
+    assertFalse(messages.isEmpty());
+
+    messages.clear();
+    dispatcher.execute("gearprogress info armor unknown", source);
+    assertFalse(messages.isEmpty());
+
+    TierKey ironTools = TierKey.of(EquipmentCategory.TOOLS, "iron");
+    when(progressionService.isUnlocked(ironTools)).thenReturn(true);
+    dispatcher.execute("gearprogress unlock tools iron", source);
+    assertFalse(messages.isEmpty());
+
+    dispatcher.execute("gearprogress unlock unknown diamond", source);
+    dispatcher.execute("gearprogress unlock tools unknown", source);
+
+    TierKey diamondArmor = TierKey.of(EquipmentCategory.ARMOR, "diamond");
+    when(progressionService.isUnlocked(diamondArmor)).thenReturn(false);
+    dispatcher.execute("gearprogress lock armor diamond", source);
+
+    dispatcher.execute("gearprogress lock unknown diamond", source);
+    dispatcher.execute("gearprogress lock armor unknown", source);
+
+    when(progressionService.unlock(ironTools, UnlockMethod.ALWAYS, "RESET"))
+        .thenReturn(CompletableFuture.completedFuture(true));
+    dispatcher.execute("gearprogress reset tools iron", source);
+    verify(progressionService).unlock(ironTools, UnlockMethod.ALWAYS, "RESET");
+
+    dispatcher.execute("gearprogress reset unknown diamond", source);
+    dispatcher.execute("gearprogress reset tools unknown", source);
+
+    when(progressionService.initialize())
+        .thenReturn(CompletableFuture.failedFuture(new RuntimeException("DB reset failure")));
+    dispatcher.execute("gearprogress reset all", source);
+
+    org.mockito.Mockito.doThrow(new RuntimeException("IO Error")).when(application).reload();
+    dispatcher.execute("gearprogress reload", source);
+  }
+
+  @Test
+  @DisplayName(
+      "Executing timer subcommands with invalid arguments or states handles errors gracefully")
+  void testTimerSubcommandsErrors() throws Exception {
+    TierKey diamondArmor = TierKey.of(EquipmentCategory.ARMOR, "diamond");
+
+    when(timerService.timeRemaining(diamondArmor))
+        .thenReturn(Optional.of(new TimeRemaining(Duration.ofHours(1), false)));
+    when(timerService.isPaused(diamondArmor)).thenReturn(true);
+    dispatcher.execute("gearprogress timer status armor diamond", source);
+
+    dispatcher.execute("gearprogress timer status unknown diamond", source);
+    dispatcher.execute("gearprogress timer pause unknown diamond", source);
+    dispatcher.execute("gearprogress timer resume unknown diamond", source);
+    dispatcher.execute("gearprogress timer add unknown diamond 1h", source);
+    dispatcher.execute("gearprogress timer set unknown diamond 1h", source);
+
+    dispatcher.execute("gearprogress timer status armor unknown", source);
+    dispatcher.execute("gearprogress timer pause armor unknown", source);
+    dispatcher.execute("gearprogress timer resume armor unknown", source);
+    dispatcher.execute("gearprogress timer add armor unknown 1h", source);
+    dispatcher.execute("gearprogress timer set armor unknown 1h", source);
+
+    dispatcher.execute("gearprogress timer add armor diamond invalid_time", source);
+    dispatcher.execute("gearprogress timer set armor diamond invalid_time", source);
+  }
+
+  @Test
+  @DisplayName("Executing commands without permissions is rejected by requirements")
+  void testPermissionRestrictions() throws Exception {
+    CommandSender unprivileged = mock(CommandSender.class);
+    when(unprivileged.getName()).thenReturn("UnprivilegedPlayer");
+    when(unprivileged.hasPermission(any(String.class))).thenReturn(false);
+    when(unprivileged.isOp()).thenReturn(false);
+
+    CommandSourceStack unprivilegedSource = PaperCommandTestSupport.createMockSource(unprivileged);
+
+    dispatcher.execute("gearprogress help", unprivilegedSource);
+
+    org.junit.jupiter.api.Assertions.assertThrows(
+        com.mojang.brigadier.exceptions.CommandSyntaxException.class,
+        () -> dispatcher.execute("gearprogress status", unprivilegedSource));
+    org.junit.jupiter.api.Assertions.assertThrows(
+        com.mojang.brigadier.exceptions.CommandSyntaxException.class,
+        () -> dispatcher.execute("gearprogress view", unprivilegedSource));
+    org.junit.jupiter.api.Assertions.assertThrows(
+        com.mojang.brigadier.exceptions.CommandSyntaxException.class,
+        () -> dispatcher.execute("gearprogress info armor diamond", unprivilegedSource));
+    org.junit.jupiter.api.Assertions.assertThrows(
+        com.mojang.brigadier.exceptions.CommandSyntaxException.class,
+        () -> dispatcher.execute("gearprogress reload", unprivilegedSource));
+    org.junit.jupiter.api.Assertions.assertThrows(
+        com.mojang.brigadier.exceptions.CommandSyntaxException.class,
+        () -> dispatcher.execute("gearprogress unlock armor diamond", unprivilegedSource));
+    org.junit.jupiter.api.Assertions.assertThrows(
+        com.mojang.brigadier.exceptions.CommandSyntaxException.class,
+        () -> dispatcher.execute("gearprogress lock armor diamond", unprivilegedSource));
+    org.junit.jupiter.api.Assertions.assertThrows(
+        com.mojang.brigadier.exceptions.CommandSyntaxException.class,
+        () -> dispatcher.execute("gearprogress reset all", unprivilegedSource));
+    org.junit.jupiter.api.Assertions.assertThrows(
+        com.mojang.brigadier.exceptions.CommandSyntaxException.class,
+        () -> dispatcher.execute("gearprogress timer pause armor diamond", unprivilegedSource));
+  }
+
+  @Test
+  @DisplayName("Suggestions provider suggests categories and registered tiers")
+  void testCommandSuggestions() throws Exception {
+    var parse = dispatcher.parse("gearprogress info ", source);
+    var suggestions = dispatcher.getCompletionSuggestions(parse).join();
+    assertFalse(suggestions.getList().isEmpty());
+
+    var parseTier = dispatcher.parse("gearprogress info armor ", source);
+    var tierSuggestions = dispatcher.getCompletionSuggestions(parseTier).join();
+    assertFalse(tierSuggestions.getList().isEmpty());
   }
 }

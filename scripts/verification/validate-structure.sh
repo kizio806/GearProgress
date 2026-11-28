@@ -70,20 +70,36 @@ required_docs=(
     "CHANGELOG.md"
     "CONTRIBUTING.md"
     "SECURITY.md"
+    "SUPPORT.md"
+    "CODE_OF_CONDUCT.md"
     "README.md"
     "AGENTS.md"
     "docs/architecture.md"
+    "docs/building.md"
+    "docs/configuration.md"
+    "docs/testing.md"
     "docs/compatibility-matrix.md"
     "docs/development.md"
     "docs/installation.md"
+    "docs/modrinth.md"
     "docs/releases.md"
     "docs/troubleshooting.md"
     "docs/wiki/README.md"
     "docs/wiki/Home.md"
+    "docs/wiki/User-Guide.md"
+    "docs/wiki/Installation-and-Compatibility.md"
+    "docs/wiki/Progression-and-Fair-Play.md"
     ".agents/AGENTS.md"
     ".agents/rules/architecture-and-boundaries.md"
     ".agents/rules/quality-gates-and-testing.md"
     ".agents/rules/source-hygiene-and-comments.md"
+    ".agents/rules/concurrency-and-folia.md"
+    ".agents/rules/sqlite-and-transactions.md"
+    ".agents/rules/localization-and-adventure.md"
+    ".agents/rules/versioning-and-releases.md"
+    ".agents/rules/minecraft-versioning-and-matrix.md"
+    ".agents/rules/ci-cd-and-security.md"
+    ".agents/rules/review-checklist-and-conventions.md"
 )
 
 missing_docs=()
@@ -99,6 +115,6 @@ if (( ${#missing_docs[@]} > 0 )); then
     exit 1
 fi
 
-python3 scripts/verification/verify_markdown_links.py
+"$ROOT_DIR/scripts/verification/verify-markdown-links.sh"
 
 echo "Structure validation passed."

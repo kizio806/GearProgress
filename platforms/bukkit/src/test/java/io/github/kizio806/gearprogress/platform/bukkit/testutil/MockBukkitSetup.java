@@ -293,6 +293,18 @@ public final class MockBukkitSetup {
             });
   }
 
+  public static void registerPlugin(String name, org.bukkit.plugin.Plugin plugin) {
+    if (plugin == null) {
+      MOCK_PLUGINS.remove(name);
+    } else {
+      MOCK_PLUGINS.put(name, plugin);
+    }
+  }
+
+  public static void clearPlugins() {
+    MOCK_PLUGINS.clear();
+  }
+
   public static org.bukkit.inventory.Inventory createMockInventory(
       org.bukkit.inventory.InventoryHolder holder, int size, String title) {
     org.bukkit.inventory.ItemStack[] contents = new org.bukkit.inventory.ItemStack[size];

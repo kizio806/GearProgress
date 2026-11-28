@@ -11,7 +11,7 @@ public final class RelativeDurationParser {
 
   private static final Pattern COMPONENT_PATTERN =
       Pattern.compile(
-          "(\\d+)\\s*([smhdw]|sec|second|seconds|min|minute|minutes|hour|hours|day|days|week|weeks)?",
+          "(\\d+)\\s*(seconds|second|sec|minutes|minute|min|hours|hour|days|day|weeks|week|[smhdw])?",
           Pattern.CASE_INSENSITIVE);
 
   private RelativeDurationParser() {}

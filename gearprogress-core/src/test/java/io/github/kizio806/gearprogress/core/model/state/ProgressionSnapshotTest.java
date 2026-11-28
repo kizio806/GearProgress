@@ -39,7 +39,6 @@ class ProgressionSnapshotTest {
     assertEquals(2, armorStates.size());
     assertTrue(snapshot.statesForCategory(EquipmentCategory.WEAPONS).isEmpty());
 
-    // Update with new state
     TierProgressState updatedDiamond = stateDiamond.withUnlocked(UnlockMethod.TIMER, "SYSTEM", now);
     ProgressionSnapshot nextSnapshot = snapshot.withState(updatedDiamond);
 

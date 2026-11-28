@@ -25,6 +25,13 @@ import java.util.concurrent.TimeUnit;
 /**
  * Asynchronous SQLite persistence implementation of {@link ProgressionRepository} utilizing
  * serialized single-writer persistence.
+ *
+ * <p><b>Concurrency Model:</b> All database mutations are submitted asynchronously to a dedicated
+ * {@link SingleWriterPersistenceExecutor}, ensuring that server tick threads are never blocked by
+ * disk I/O or SQLite transactional locks.
+ *
+ * <p><b>Threading Guarantees:</b> All public methods are non-blocking and return {@link
+ * CompletableFuture}s, safe to call from any Bukkit/Folia thread context.
  */
 public final class SQLiteProgressionRepository implements ProgressionRepository {
 

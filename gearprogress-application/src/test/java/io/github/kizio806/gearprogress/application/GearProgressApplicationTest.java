@@ -24,7 +24,6 @@ class GearProgressApplicationTest {
 
   @Test
   void testApplicationLifecycle(@TempDir Path tempDir) throws IOException {
-    // Write sample config.yml
     Files.writeString(
         tempDir.resolve("config.yml"),
         """
@@ -32,7 +31,6 @@ class GearProgressApplicationTest {
         timer-check-interval-ticks: 20
         """);
 
-    // Write sample equipment.yml
     Files.writeString(
         tempDir.resolve("equipment.yml"),
         """
@@ -107,31 +105,25 @@ class GearProgressApplicationTest {
     assertTrue(app.currentState(iron).isPresent());
     assertTrue(app.currentState(EquipmentCategory.ARMOR, "iron").isPresent());
 
-    // Unlock diamond via API
     boolean unlocked = app.unlock(EquipmentCategory.ARMOR, "diamond", "TEST").join();
     assertTrue(unlocked);
     assertTrue(app.isUnlocked(diamond));
 
-    // Lock diamond via API
     boolean locked = app.lock(EquipmentCategory.ARMOR, "diamond", "TEST").join();
     assertTrue(locked);
     assertFalse(app.isUnlocked(diamond));
 
-    // Unlock again with TierKey overload
     boolean unlockedAgain = app.unlock(diamond, "TEST").join();
     assertTrue(unlockedAgain);
     assertTrue(app.isUnlocked(diamond));
 
-    // Lock with TierKey overload
     boolean lockedAgain = app.lock(diamond, "TEST").join();
     assertTrue(lockedAgain);
     assertFalse(app.isUnlocked(diamond));
 
-    // Remaining time checks
     assertFalse(app.remainingTime(iron).isPresent());
     assertFalse(app.remainingTime(EquipmentCategory.ARMOR, "iron").isPresent());
 
-    // Accessors
     assertNotNull(app.progressionService());
     assertNotNull(app.restrictionQueryService());
     assertNotNull(app.timerService());
@@ -140,7 +132,6 @@ class GearProgressApplicationTest {
     assertNotNull(app.localeCatalog());
     assertNotNull(app.eventPublisher());
 
-    // Reload
     app.reload();
     app.shutdown();
   }

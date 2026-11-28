@@ -38,8 +38,8 @@ gearprogress/
 ```
 
 This compiles all modules, runs all unit and integration tests, and generates production distribution JARs in:
-- `distributions/paper/build/libs/GearProgress-<version>-paper.jar`
-- `distributions/spigot/build/libs/GearProgress-<version>-spigot.jar`
+- `distributions/paper/build/libs/gearprogress-<base>-<range>-paper-purpur-folia.jar`
+- `distributions/spigot/build/libs/gearprogress-<base>-<range>-spigot-bukkit.jar`
 
 ### Code Formatting and Linting
 ```bash

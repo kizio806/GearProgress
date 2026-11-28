@@ -16,6 +16,11 @@ import org.bukkit.inventory.ItemStack;
 
 /**
  * Listens to enchantment and anvil events to enforce enchantment restrictions per equipment tier.
+ *
+ * <p><b>Anti-Bypass Mechanisms:</b> In addition to direct enchantment at enchanting tables ({@link
+ * PrepareItemEnchantEvent}), this listener intercepts anvil combining ({@link PrepareAnvilEvent})
+ * and smithing upgrades ({@link PrepareSmithingEvent}) that would carry over enchantments onto an
+ * upgraded tier where enchantments are currently forbidden.
  */
 public final class EnchantmentRestrictionListener implements Listener {
 

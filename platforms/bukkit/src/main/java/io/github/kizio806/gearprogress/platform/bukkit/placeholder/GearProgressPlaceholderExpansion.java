@@ -16,6 +16,18 @@ import org.jetbrains.annotations.Nullable;
 /**
  * PlaceholderAPI expansion exposing GearProgress progression metrics, countdowns, and tier
  * statuses.
+ *
+ * <p><b>Supported Placeholders:</b>
+ *
+ * <ul>
+ *   <li>{@code %gearprogress_diamond_unlocked%} - Boolean flag for diamond armor
+ *   <li>{@code %gearprogress_netherite_unlocked%} - Boolean flag for netherite armor
+ *   <li>{@code %gearprogress_current_stage%} - Highest unlocked armor tier name
+ *   <li>{@code %gearprogress_next_unlock%} - Name of the next tier awaiting timer unlock
+ *   <li>{@code %gearprogress_time_remaining_<category>_<tier>%} - Human-readable time remaining
+ *   <li>{@code %gearprogress_is_unlocked_<category>_<tier>%} - Boolean unlock status
+ *   <li>{@code %gearprogress_status_<category>_<tier>%} - Current status string (UNLOCKED/LOCKED)
+ * </ul>
  */
 public final class GearProgressPlaceholderExpansion extends PlaceholderExpansion {
 
@@ -54,7 +66,6 @@ public final class GearProgressPlaceholderExpansion extends PlaceholderExpansion
   public @Nullable String onRequest(@Nullable OfflinePlayer player, @NotNull String params) {
     String lower = params.toLowerCase(java.util.Locale.ROOT);
 
-    // %gearprogress_diamond_unlocked%
     if (lower.equals("diamond_unlocked")) {
       boolean unlocked =
           application
@@ -63,7 +74,6 @@ public final class GearProgressPlaceholderExpansion extends PlaceholderExpansion
       return String.valueOf(unlocked);
     }
 
-    // %gearprogress_netherite_unlocked%
     if (lower.equals("netherite_unlocked")) {
       boolean unlocked =
           application
@@ -72,29 +82,24 @@ public final class GearProgressPlaceholderExpansion extends PlaceholderExpansion
       return String.valueOf(unlocked);
     }
 
-    // %gearprogress_current_stage%
     if (lower.equals("current_stage")) {
       return resolveCurrentStage();
     }
 
-    // %gearprogress_next_unlock%
     if (lower.equals("next_unlock")) {
       return resolveNextUnlock();
     }
 
-    // %gearprogress_time_remaining_<category>_<tier>%
     if (lower.startsWith("time_remaining_")) {
       String remainder = lower.substring("time_remaining_".length());
       return resolveTimeRemaining(remainder);
     }
 
-    // %gearprogress_is_unlocked_<category>_<tier>%
     if (lower.startsWith("is_unlocked_")) {
       String remainder = lower.substring("is_unlocked_".length());
       return resolveIsUnlocked(remainder);
     }
 
-    // %gearprogress_status_<category>_<tier>%
     if (lower.startsWith("status_")) {
       String remainder = lower.substring("status_".length());
       return resolveStatus(remainder);
@@ -104,7 +109,6 @@ public final class GearProgressPlaceholderExpansion extends PlaceholderExpansion
   }
 
   private String resolveCurrentStage() {
-    // Return highest unlocked tier in Armor
     String[] armorTiers = {"netherite", "diamond", "iron", "chainmail", "golden", "leather"};
     for (String tier : armorTiers) {
       if (application.progressionService().isUnlocked(TierKey.of(EquipmentCategory.ARMOR, tier))) {

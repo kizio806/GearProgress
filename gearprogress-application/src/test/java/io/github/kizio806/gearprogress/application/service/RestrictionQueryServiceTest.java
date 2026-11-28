@@ -57,17 +57,14 @@ class RestrictionQueryServiceTest {
 
     progressionService.initialize().join();
 
-    // Locked: craft and equip are restricted
     assertTrue(queryService.isActionRestricted(diamond, RestrictionType.CRAFT));
     assertTrue(queryService.isActionRestricted(diamond, RestrictionType.EQUIP));
     assertFalse(queryService.isActionRestricted(diamond, RestrictionType.USE));
     assertFalse(queryService.isActionRestricted(diamond, RestrictionType.PICKUP));
     assertTrue(queryService.isEnchantmentForbidden(diamond));
 
-    // Unlock diamond
     progressionService.unlock(diamond, UnlockMethod.COMMAND, "ADMIN").join();
 
-    // Unlocked: no actions are restricted
     assertFalse(queryService.isActionRestricted(diamond, RestrictionType.CRAFT));
     assertFalse(queryService.isActionRestricted(diamond, RestrictionType.EQUIP));
   }

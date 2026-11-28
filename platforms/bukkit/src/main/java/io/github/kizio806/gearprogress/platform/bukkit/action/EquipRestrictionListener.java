@@ -21,8 +21,18 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
 /**
- * Listens to player interactions and inventory clicks to prevent equipping restricted equipment
+ * Listens to player interactions and inventory events to prevent equipping restricted equipment
  * tiers.
+ *
+ * <p><b>Security & Anti-Bypass Vectors:</b> Intercepts all vanilla mechanisms by which equipment
+ * can be equipped:
+ *
+ * <ul>
+ *   <li>Right-click armor equipping from hand ({@link PlayerInteractEvent})
+ *   <li>Direct placement, swap, or shift-click into armor slots ({@link InventoryClickEvent})
+ *   <li>Drag distributions across armor slots ({@link InventoryDragEvent})
+ *   <li>Dispenser equipping onto target players ({@link BlockDispenseArmorEvent})
+ * </ul>
  */
 public final class EquipRestrictionListener implements Listener {
 
@@ -79,7 +89,6 @@ public final class EquipRestrictionListener implements Listener {
       return;
     }
 
-    // Direct placement into armor slot
     if (event.getSlotType() == InventoryType.SlotType.ARMOR) {
       ItemStack itemToEquip = event.getCursor();
       if (event.getClick() == ClickType.NUMBER_KEY && event.getHotbarButton() >= 0) {
@@ -97,7 +106,6 @@ public final class EquipRestrictionListener implements Listener {
       }
     }
 
-    // Shift click from player inventory towards armor slot
     if (event.isShiftClick()) {
       ItemStack current = event.getCurrentItem();
       if (current != null && current.getAmount() > 0) {

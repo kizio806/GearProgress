@@ -144,4 +144,26 @@ class FeedbackNotifierTest {
           notifier.notifyEnchantmentForbidden(null, key);
         });
   }
+
+  @Test
+  @DisplayName("Default constructor and disabled notification channels are handled properly")
+  void testNotificationChannelsDisabledAndDefaultConstructor() {
+    FeedbackNotifier defaultNotifier = new FeedbackNotifier(config, locales);
+    org.junit.jupiter.api.Assertions.assertNotNull(defaultNotifier);
+
+    PluginConfigSpec noNotifications =
+        new PluginConfigSpec("en-US", 20L, true, false, false, "", true, "gearprogress.bypass");
+    FeedbackNotifier silentNotifier = new FeedbackNotifier(noNotifications, locales, p -> audience);
+    Player player = mock(Player.class);
+    when(player.getUniqueId()).thenReturn(UUID.randomUUID());
+    TierKey key = TierKey.of(EquipmentCategory.ARMOR, "diamond");
+
+    silentNotifier.notifyRestricted(player, key, RestrictionType.CRAFT);
+    verify(audience, org.mockito.Mockito.never()).sendMessage(any(Component.class));
+    verify(audience, org.mockito.Mockito.never()).sendActionBar(any(Component.class));
+
+    silentNotifier.notifyEnchantmentForbidden(player, key);
+    verify(audience, org.mockito.Mockito.never()).sendMessage(any(Component.class));
+    verify(audience, org.mockito.Mockito.never()).sendActionBar(any(Component.class));
+  }
 }

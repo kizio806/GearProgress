@@ -7,7 +7,24 @@ import io.github.kizio806.gearprogress.core.time.TimeRemaining;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
-/** Public programmatic API for interacting with the GearProgress progression engine. */
+/**
+ * Public programmatic API for interacting with the GearProgress progression engine.
+ *
+ * <p><b>Integration Contract:</b> This interface is exposed to external Bukkit/Paper plugins to
+ * query equipment tier lock status, enchantment permissions, remaining timer durations, and to
+ * programmatically trigger tier transitions.
+ *
+ * <p><b>Threading Guarantees:</b>
+ *
+ * <ul>
+ *   <li>Read/Query methods ({@link #isUnlocked(TierKey)}, {@link #isEnchantmentAllowed(TierKey)},
+ *       {@link #remainingTime(TierKey)}) are lock-free, zero-allocation lookups against in-memory
+ *       state, guaranteed safe for invocation on hot server tick threads.
+ *   <li>Mutation methods ({@link #unlock(TierKey, String)}, {@link #lock(TierKey, String)})
+ *       asynchronously persist state changes to storage and return {@link CompletableFuture}s. They
+ *       never block the caller thread.
+ * </ul>
+ */
 public interface GearProgressApi {
 
   /**

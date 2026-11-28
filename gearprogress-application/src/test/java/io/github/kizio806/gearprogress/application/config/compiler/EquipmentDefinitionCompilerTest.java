@@ -143,4 +143,47 @@ class EquipmentDefinitionCompilerTest {
     var result = compiler.compile(root);
     assertFalse(result.isSuccessful());
   }
+
+  @Test
+  void testCompileNeverCommandAndRestrictionsWarnings() {
+    TierConfigSpec neverSpec =
+        new TierConfigSpec("never", Optional.empty(), Optional.empty(), false, Map.of());
+    TierConfigSpec cmdSpec =
+        new TierConfigSpec(
+            "command",
+            Optional.empty(),
+            Optional.empty(),
+            true,
+            Map.of("unknown_action", true, "craft", true));
+    TierConfigSpec invalidTimer =
+        new TierConfigSpec(
+            "timer", Optional.of("invalid_duration_string"), Optional.empty(), true, Map.of());
+
+    CategoryConfigSpec cat =
+        new CategoryConfigSpec(
+            Map.of("leather", neverSpec, "diamond", cmdSpec, "netherite", invalidTimer));
+    EquipmentConfigSpec root = new EquipmentConfigSpec(Map.of("armor", cat));
+
+    var result = compiler.compile(root);
+    assertFalse(result.isSuccessful()); // invalidTimer causes error
+    assertFalse(result.validationResult().warnings().isEmpty()); // unknown_action causes warning
+
+    var definitions = result.definitions();
+    assertEquals(2, definitions.size());
+
+    var neverDef =
+        definitions.stream()
+            .filter(d -> d.key().tier().equals("leather"))
+            .findFirst()
+            .orElseThrow();
+    assertTrue(neverDef.unlockCondition() instanceof UnlockCondition.Never);
+
+    var cmdDef =
+        definitions.stream()
+            .filter(d -> d.key().tier().equals("diamond"))
+            .findFirst()
+            .orElseThrow();
+    assertTrue(cmdDef.unlockCondition() instanceof UnlockCondition.Command);
+    assertTrue(cmdDef.restrictionPolicy().isRestricted(RestrictionType.CRAFT));
+  }
 }

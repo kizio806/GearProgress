@@ -11,6 +11,12 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * In-memory thread-safe implementation of {@link ProgressionRepository} for tests and fallbacks.
+ *
+ * <p><b>Usage:</b> Intended for unit testing and non-persistent testing environments. All write
+ * operations return immediately completed {@link CompletableFuture}s without performing disk I/O.
+ *
+ * <p><b>Threading Guarantees:</b> Backed by a {@link ConcurrentHashMap}, safe for concurrent
+ * access.
  */
 public final class InMemoryProgressionRepository implements ProgressionRepository {
 

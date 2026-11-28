@@ -17,7 +17,15 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-/** Builds and displays the interactive progression GUI for viewing unlocked and locked tiers. */
+/**
+ * Builds and displays the interactive progression GUI for viewing unlocked and locked tiers.
+ *
+ * <p><b>Layout Design:</b> Renders a 54-slot chest view containing category tier indicators,
+ * real-time countdown lore, restriction summaries, and a central summary nether star at slot 49.
+ *
+ * <p><b>Interaction Security:</b> All slots are non-modifiable and protected against item
+ * extraction by {@link ProgressionGuiListener}.
+ */
 public final class ProgressionGuiView {
 
   private static final int INVENTORY_SIZE = 54;
@@ -80,7 +88,6 @@ public final class ProgressionGuiView {
       inventory.setItem(slot++, item);
     }
 
-    // Fill bottom row with gray decorative panes
     ItemStack filler = createFillerItem();
     for (int i = 45; i < INVENTORY_SIZE; i++) {
       if (i != SUMMARY_SLOT) {
@@ -88,7 +95,6 @@ public final class ProgressionGuiView {
       }
     }
 
-    // Summary item at slot 49
     inventory.setItem(SUMMARY_SLOT, createSummaryItem(unlockedCount, totalCount));
   }
 

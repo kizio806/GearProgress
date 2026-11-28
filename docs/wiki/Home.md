@@ -23,7 +23,7 @@ A phased rollout where high-tier equipment unlocks gradually:
 - **Day 14:** Netherite crafting and equipment unlocked for the server.
 
 ```yaml
-# config/equipment.yml
+# plugins/GearProgress/equipment.yml
 armor:
   diamond:
     unlock:
@@ -32,6 +32,8 @@ armor:
     restrictions:
       equip: true
       use: true
+    enchantments:
+      allow-enchanted: false
   netherite:
     unlock:
       type: timer
@@ -40,6 +42,8 @@ armor:
       craft: true
       equip: true
       use: true
+      pickup: true
+      inventory-move: true
 ```
 
 ### 2. Event-Driven Unlock (Command / Quest Triggered)
@@ -64,9 +68,15 @@ Unlocking is performed via:
 
 | Command | Permission | Description |
 |---|---|---|
-| `/gearprogress info [category] [tier]` | `gearprogress.info` | Display current tier unlock status and timer. |
-| `/gearprogress unlock <category> <tier>` | `gearprogress.admin` | Force-unlock a tier ahead of schedule. |
-| `/gearprogress lock <category> <tier>` | `gearprogress.admin` | Force-lock a tier. |
+| `/gearprogress info [cat] [tier]` | `gearprogress.info` | Display current tier unlock status and timer. |
+| `/gearprogress gui` | `gearprogress.gui` | Open interactive visual progression chest GUI. |
+| `/gearprogress unlock <cat> <tier>` | `gearprogress.admin` | Force-unlock a tier ahead of schedule. |
+| `/gearprogress lock <cat> <tier>` | `gearprogress.admin` | Force-lock a tier. |
+| `/gearprogress reset <cat> <tier>` | `gearprogress.admin` | Reset a tier to initial configuration. |
+| `/gearprogress timer pause <cat> <tier>` | `gearprogress.admin` | Pause a countdown timer. |
+| `/gearprogress timer resume <cat> <tier>` | `gearprogress.admin` | Resume a paused timer. |
+| `/gearprogress timer add <cat> <tier> <dur>` | `gearprogress.admin` | Add duration to a timer (e.g. `2d`). |
+| `/gearprogress timer set <cat> <tier> <dur>` | `gearprogress.admin` | Set exact remaining duration. |
 | `/gearprogress reload` | `gearprogress.admin` | Reload configuration files without restarting. |
 
 ---
@@ -75,6 +85,8 @@ Unlocking is performed via:
 
 | Placeholder | Example Output | Description |
 |---|---|---|
-| `%gearprogress_unlocked_<category>_<tier>%` | `true` / `false` | Whether the specified tier is unlocked. |
-| `%gearprogress_time_remaining_<category>_<tier>%` | `2d 14h 32m` | Human-readable time remaining until unlock. |
-| `%gearprogress_state_<category>_<tier>%` | `LOCKED` / `UNLOCKED` | Current status enum string. |
+| `%gearprogress_current_stage_<category>%` | `diamond` | Currently unlocked tier in category. |
+| `%gearprogress_next_unlock_<category>%` | `netherite` | Next upcoming tier to be unlocked. |
+| `%gearprogress_time_remaining_<cat>_<tier>%` | `3d 14h 22m` | Formatted countdown until unlock. |
+| `%gearprogress_is_unlocked_<cat>_<tier>%` | `true` / `false` | Boolean unlock status. |
+| `%gearprogress_status_<cat>_<tier>%` | `UNLOCKED`, `LOCKED` | Current progression state enum. |

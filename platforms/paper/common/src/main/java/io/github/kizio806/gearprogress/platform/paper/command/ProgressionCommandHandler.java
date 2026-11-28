@@ -164,7 +164,6 @@ public final class ProgressionCommandHandler {
       return 0;
     }
 
-    // Reset single tier to its default config state
     boolean initialUnlocked = defOpt.get().unlockCondition() instanceof UnlockCondition.Always;
     if (initialUnlocked) {
       application.progressionService().unlock(key, UnlockMethod.ALWAYS, "RESET").join();

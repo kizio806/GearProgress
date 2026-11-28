@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -149,5 +150,28 @@ class GearProgressPlaceholderExpansionTest {
   void testUnknownPlaceholder() {
     OfflinePlayer player = mock(OfflinePlayer.class);
     assertNull(expansion.onRequest(player, "unknown_placeholder_xyz"));
+  }
+
+  @Test
+  @DisplayName("Placeholder edge cases return fallback strings")
+  void testPlaceholderFallbacks() {
+    OfflinePlayer player = mock(OfflinePlayer.class);
+
+    when(progressionService.isUnlocked(any(TierKey.class))).thenReturn(false);
+    assertEquals("none", expansion.onRequest(player, "current_stage"));
+
+    assertEquals("none", expansion.onRequest(player, "next_unlock"));
+
+    assertEquals("invalid", expansion.onRequest(player, "time_remaining_invalid"));
+    assertEquals("invalid", expansion.onRequest(player, "time_remaining_armor_"));
+    assertEquals("invalid", expansion.onRequest(player, "time_remaining_unknowncat_tier"));
+
+    TierKey noTimerKey = TierKey.of(EquipmentCategory.ARMOR, "leather");
+    when(progressionService.isUnlocked(noTimerKey)).thenReturn(false);
+    when(timerService.timeRemaining(noTimerKey)).thenReturn(Optional.empty());
+    assertEquals("none", expansion.onRequest(player, "time_remaining_armor_leather"));
+
+    assertEquals("false", expansion.onRequest(player, "is_unlocked_invalid"));
+    assertEquals("UNKNOWN", expansion.onRequest(player, "status_invalid"));
   }
 }

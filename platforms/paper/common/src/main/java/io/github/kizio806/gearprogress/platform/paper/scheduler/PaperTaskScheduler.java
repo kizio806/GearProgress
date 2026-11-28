@@ -10,6 +10,10 @@ import org.bukkit.plugin.Plugin;
 /**
  * Task scheduler implementation utilizing Paper's AsyncScheduler for Folia and region-thread
  * safety.
+ *
+ * <p><b>Folia Architectural Invariant:</b> Uses {@code server.getAsyncScheduler()} instead of the
+ * classic Bukkit scheduler singleton, guaranteeing that asynchronous tasks never interact with
+ * regional tick loops and remain safe across Paper, Purpur, and Folia runtimes.
  */
 public final class PaperTaskScheduler implements TaskSchedulerPort {
 

@@ -11,6 +11,16 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Dedicated single-threaded persistence executor ensuring serialized database writes in SQLite WAL
  * mode.
+ *
+ * <p><b>Architectural Rationale:</b> SQLite in Write-Ahead Logging (WAL) mode supports concurrent
+ * readers alongside a single writer. However, concurrent write attempts from multiple Folia regions
+ * or worker threads inevitably trigger {@code SQLITE_BUSY} lock contention. This executor funnels
+ * all disk persistence through a single dedicated daemon thread, eliminating write contention
+ * entirely and guaranteeing that tick threads never block on disk I/O.
+ *
+ * <p><b>Threading Guarantees:</b> The {@link #submit(Callable)} and {@link #run(PersistenceTask)}
+ * methods are lock-free and thread-safe, suitable for invocation from any server tick or async
+ * thread.
  */
 public final class SingleWriterPersistenceExecutor {
 

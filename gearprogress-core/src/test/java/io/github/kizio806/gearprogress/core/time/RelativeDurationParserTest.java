@@ -11,10 +11,17 @@ class RelativeDurationParserTest {
   @Test
   void testParseSimpleUnits() {
     assertEquals(Duration.ofSeconds(45), RelativeDurationParser.parse("45s"));
+    assertEquals(Duration.ofSeconds(45), RelativeDurationParser.parse("45 seconds"));
+    assertEquals(Duration.ofSeconds(45), RelativeDurationParser.parse("45sec"));
     assertEquals(Duration.ofMinutes(10), RelativeDurationParser.parse("10m"));
+    assertEquals(Duration.ofMinutes(10), RelativeDurationParser.parse("10 minutes"));
+    assertEquals(Duration.ofMinutes(10), RelativeDurationParser.parse("10min"));
     assertEquals(Duration.ofHours(3), RelativeDurationParser.parse("3h"));
+    assertEquals(Duration.ofHours(3), RelativeDurationParser.parse("3 hours"));
     assertEquals(Duration.ofDays(7), RelativeDurationParser.parse("7d"));
+    assertEquals(Duration.ofDays(7), RelativeDurationParser.parse("7 days"));
     assertEquals(Duration.ofDays(14), RelativeDurationParser.parse("2w"));
+    assertEquals(Duration.ofDays(14), RelativeDurationParser.parse("2 weeks"));
   }
 
   @Test
@@ -34,6 +41,9 @@ class RelativeDurationParserTest {
     assertThrows(IllegalArgumentException.class, () -> RelativeDurationParser.parse(""));
     assertThrows(IllegalArgumentException.class, () -> RelativeDurationParser.parse("abc"));
     assertThrows(IllegalArgumentException.class, () -> RelativeDurationParser.parse("5x"));
+    assertThrows(
+        IllegalArgumentException.class, () -> RelativeDurationParser.parse("10s unrecognized"));
+    assertThrows(IllegalArgumentException.class, () -> RelativeDurationParser.parse("P_invalid"));
   }
 
   @Test

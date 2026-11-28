@@ -74,10 +74,17 @@ public final class FileSystemLocaleLoader {
     return new LocaleCatalog(selected, english, selectedMessages);
   }
 
+  /**
+   * Reads and merges locale entries by overlaying operator file overrides on top of bundled
+   * defaults.
+   *
+   * @param locale the locale tag
+   * @return merged key-value translation map
+   * @throws IOException on I/O failure
+   */
   private Map<String, String> readMergedLocale(String locale) throws IOException {
     Map<String, String> result = new LinkedHashMap<>();
 
-    // 1. Read bundled resource if available
     try (InputStream bundled = getClass().getResourceAsStream("/locales/" + locale + ".yml")) {
       if (bundled != null) {
         String content = new String(bundled.readAllBytes(), StandardCharsets.UTF_8);
@@ -85,7 +92,6 @@ public final class FileSystemLocaleLoader {
       }
     }
 
-    // 2. Read operator file on disk as overlay
     Path operatorFile = localesDirectory.resolve(locale + ".yml");
     if (Files.isRegularFile(operatorFile)) {
       String content = Files.readString(operatorFile, StandardCharsets.UTF_8);

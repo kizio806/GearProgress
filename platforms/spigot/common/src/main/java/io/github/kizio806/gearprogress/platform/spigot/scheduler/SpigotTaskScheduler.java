@@ -7,7 +7,13 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitTask;
 
-/** Task scheduler implementation delegating to standard Bukkit asynchronous scheduler methods. */
+/**
+ * Task scheduler implementation delegating to standard Bukkit asynchronous scheduler methods.
+ *
+ * <p><b>Platform Integration:</b> Used on Spigot and CraftBukkit platforms where the modern Paper
+ * async scheduler API is unavailable, converting duration intervals into standard 50ms server
+ * ticks.
+ */
 public final class SpigotTaskScheduler implements TaskSchedulerPort {
 
   private final Plugin plugin;

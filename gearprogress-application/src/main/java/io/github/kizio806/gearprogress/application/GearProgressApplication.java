@@ -31,7 +31,23 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
-/** Platform-independent application orchestrator for GearProgress. */
+/**
+ * Central platform-independent application orchestrator for GearProgress.
+ *
+ * <p><b>Architectural Role:</b> Acts as the Hexagonal Application Core orchestrator. It manages the
+ * compilation of YAML definitions into immutable runtime models, maintains service lifecycles, and
+ * implements {@link GearProgressApi} while remaining completely free of Minecraft/Bukkit runtime
+ * dependencies.
+ *
+ * <p><b>Threading Guarantees:</b>
+ *
+ * <ul>
+ *   <li>Configuration reloading ({@link #reload()}) and shutdown ({@link #shutdown()}) are
+ *       synchronized.
+ *   <li>Live query operations are non-blocking and lock-free across all threads.
+ *   <li>Background evaluation of unlock timers runs asynchronously via {@link TaskSchedulerPort}.
+ * </ul>
+ */
 public final class GearProgressApplication implements GearProgressApi {
 
   private final Path dataDirectory;
@@ -99,18 +115,15 @@ public final class GearProgressApplication implements GearProgressApi {
   }
 
   private void loadConfigurations() throws IOException {
-    // 1. Config.yml
     Path configPath = dataDirectory.resolve("config.yml");
     Map<String, Object> configMap = yamlLoader.loadFile(configPath);
     if (!configMap.isEmpty()) {
       this.pluginConfig = yamlLoader.parsePluginSpec(configMap);
     }
 
-    // 2. Locales
     FileSystemLocaleLoader localeLoader = new FileSystemLocaleLoader(dataDirectory);
     this.localeCatalog = localeLoader.loadCatalog(pluginConfig.locale());
 
-    // 3. Equipment.yml
     Path equipmentPath = dataDirectory.resolve("equipment.yml");
     Map<String, Object> equipmentMap = yamlLoader.loadFile(equipmentPath);
     if (!equipmentMap.isEmpty()) {
@@ -128,7 +141,6 @@ public final class GearProgressApplication implements GearProgressApi {
           "Compiled " + result.definitions().size() + " equipment progression tier definitions.");
     }
 
-    // 4. Timers.yml
     Path timersPath = dataDirectory.resolve("timers.yml");
     Map<String, Object> timersMap = yamlLoader.loadFile(timersPath);
     if (!timersMap.isEmpty()) {
@@ -163,8 +175,6 @@ public final class GearProgressApplication implements GearProgressApi {
     }
     repository.close();
   }
-
-  // --- API Implementation ---
 
   @Override
   public boolean isUnlocked(EquipmentCategory category, String tier) {
@@ -225,8 +235,6 @@ public final class GearProgressApplication implements GearProgressApi {
   public Optional<TierProgressState> currentState(TierKey key) {
     return progressionService.state(key);
   }
-
-  // --- Service Accessors ---
 
   public ProgressionService progressionService() {
     return progressionService;
